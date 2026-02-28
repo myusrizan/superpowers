@@ -7,6 +7,9 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
 PLUGIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
+# Rebuild skills/ from custom-skills/ before anything else
+"${PLUGIN_ROOT}/scripts/build-skills.sh" 2>/dev/null || true
+
 # Check if legacy skills directory exists and build warning
 warning_message=""
 legacy_skills_dir="${HOME}/.config/superpowers/skills"
@@ -15,7 +18,7 @@ if [ -d "$legacy_skills_dir" ]; then
 fi
 
 # Read using-superpowers content
-using_superpowers_content=$(cat "${PLUGIN_ROOT}/skills/using-superpowers/SKILL.md" 2>&1 || echo "Error reading using-superpowers skill")
+using_superpowers_content=$(cat "${PLUGIN_ROOT}/skills/meta/using-superpowers/SKILL.md" 2>&1 || echo "Error reading using-superpowers skill")
 
 # Escape string for JSON embedding using bash parameter substitution.
 # Each ${s//old/new} is a single C-level pass - orders of magnitude

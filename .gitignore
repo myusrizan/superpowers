@@ -2,3 +2,6 @@
 .private-journal/
 .claude/
 .DS_Store
+skills
+findings
+logs

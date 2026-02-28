@@ -72,15 +72,62 @@ These thoughts mean STOP—you're rationalizing:
 | "This feels productive" | Undisciplined action wastes time. Skills prevent this. |
 | "I know what that means" | Knowing the concept ≠ using the skill. Invoke it. |
 
+## Skill Catalog
+
+Skills are organized into categories. Invoke by name using the `Skill` tool (e.g. `superpowers:summarizing`).
+
+**coding/** — Software development workflow
+| Skill | Use when |
+|-------|----------|
+| `brainstorming` | Planning any new feature or change — before writing code |
+| `writing-plans` | Design approved, need it broken into tasks |
+| `executing-plans` | Running a plan step-by-step with human checkpoints |
+| `test-driven-development` | Implementing any feature or bugfix |
+| `systematic-debugging` | Something is broken and root cause is unknown |
+| `verification-before-completion` | About to declare work done |
+| `requesting-code-review` | Code ready, requesting review |
+| `receiving-code-review` | Responding to review feedback |
+
+**agents/** — Agent orchestration
+| Skill | Use when |
+|-------|----------|
+| `subagent-driven-development` | Executing independent plan tasks in same session with auto-review |
+| `dispatching-parallel-agents` | Running multiple tasks concurrently across separate sessions |
+
+**git/** — Version control
+| Skill | Use when |
+|-------|----------|
+| `using-git-worktrees` | Starting implementation that shouldn't touch main |
+| `finishing-a-development-branch` | Tasks done — merge, PR, keep, or discard |
+
+**thinking/** — Intellectual engagement
+| Skill | Use when |
+|-------|----------|
+| `thinking-partner` | User wants opinions, ideas challenged, or to think out loud |
+
+**qol/** — Output production
+| Skill | Use when |
+|-------|----------|
+| `researching` | Need to find and synthesize information from external sources |
+| `summarizing` | User has content and wants it condensed |
+| `explaining` | User needs a concept made understandable |
+| `drafting` | User needs a message, email, or communication written |
+
+**meta/** — Skill system
+| Skill | Use when |
+|-------|----------|
+| `writing-skills` | Creating or editing a SKILL.md |
+| `capturing-context` | User explicitly says "extract the context" |
+
 ## Skill Priority
 
-When multiple skills could apply, use this order:
+When multiple skills could apply:
 
-1. **Process skills first** (brainstorming, debugging) - these determine HOW to approach the task
-2. **Implementation skills second** (frontend-design, mcp-builder) - these guide execution
+1. **Process skills first** (brainstorming, debugging) — these determine HOW to approach the task
+2. **Output skills second** (summarizing, drafting, explaining) — these guide what to produce
 
-"Let's build X" → brainstorming first, then implementation skills.
-"Fix this bug" → debugging first, then domain-specific skills.
+"Let's build X" → brainstorming first.
+"Fix this bug" → systematic-debugging first.
 
 ## Skill Types
 
