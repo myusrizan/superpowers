@@ -223,6 +223,13 @@ Done!
 - Repeat until approved
 - Don't skip the re-review
 
+**Loop limit — HARD STOP:**
+- If spec compliance OR code quality review cycles exceed 3 on the same task:
+  1. STOP — do not attempt fix #4
+  2. Surface to user: what was implemented, what the reviewer rejected, what was tried
+  3. Wait for explicit human direction before proceeding
+  "This is broken" is not sufficient — get a specific instruction ("fix X specifically" or "accept current state and move on")
+
 **If subagent fails task:**
 - Dispatch fix subagent with specific instructions
 - Don't try to fix manually (context pollution)

@@ -128,7 +128,29 @@ Return: Summary of what you found and what you fixed.
 **Exploratory debugging:** You don't know what's broken yet
 **Shared state:** Agents would interfere (editing same files, using same resources)
 
-## Real Example from Session
+## Example: Parallel Research
+
+**Scenario:** Evaluating 3 technology options independently
+
+**Tasks:**
+- Research option A: performance characteristics and ecosystem maturity
+- Research option B: developer experience and tooling
+- Research option C: production case studies and adoption
+
+**Why parallel:** Each research task is self-contained. Findings from one don't gate the others.
+
+**Dispatch:**
+```
+Agent 1 → Research option A performance and ecosystem
+Agent 2 → Research option B DX and tooling
+Agent 3 → Research option C production cases
+```
+
+**Integration:** Each agent returns a summary. Combine results for comparison.
+
+---
+
+## Example: Parallel Debugging
 
 **Scenario:** 6 test failures across 3 files after major refactoring
 

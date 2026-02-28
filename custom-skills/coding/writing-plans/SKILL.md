@@ -7,9 +7,9 @@ description: Use when you have a spec or requirements for a multi-step task, bef
 
 ## Overview
 
-Write comprehensive implementation plans assuming the engineer has zero context for our codebase and questionable taste. Document everything they need to know: which files to touch for each task, code, testing, docs they might need to check, how to test it. Give them the whole plan as bite-sized tasks. DRY. YAGNI. TDD. Frequent commits.
+Write comprehensive implementation plans for the AI agent or model that will execute them. Assume zero codebase context and no familiarity with the project's toolset or conventions. Document everything needed: which files to touch, exact code, exact commands, expected outputs. Give the full plan as bite-sized tasks. DRY. YAGNI. TDD. Frequent commits.
 
-Assume they are a skilled developer, but know almost nothing about our toolset or problem domain. Assume they don't know good test design very well.
+Assume a skilled executor, but with no project context and limited test design knowledge. Write explicitly — never say "add validation" when you can show the exact code.
 
 **Announce at start:** "I'm using the writing-plans skill to create the implementation plan."
 

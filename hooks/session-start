@@ -20,6 +20,22 @@ fi
 # Read using-superpowers content
 using_superpowers_content=$(cat "${PLUGIN_ROOT}/skills/meta/using-superpowers/SKILL.md" 2>&1 || echo "Error reading using-superpowers skill")
 
+# Load previous session context if available (OPT-2)
+prev_context_section=""
+logs_dir="${PLUGIN_ROOT}/logs"
+if [ -d "$logs_dir" ]; then
+    latest_log=$(ls -t "${logs_dir}"/*.md 2>/dev/null | head -1)
+    if [ -n "$latest_log" ]; then
+        log_lines=$(wc -l < "$latest_log" 2>/dev/null || echo 0)
+        if [ "$log_lines" -le 150 ]; then
+            prev_log_content=$(cat "$latest_log" 2>/dev/null || true)
+            prev_context_section="\n\n<previous-session-context>\nPrevious session log found at: ${latest_log}\n\n${prev_log_content}\n\nUse this to restore context. Reference the unresolved/next-steps section to inform your first response.\n</previous-session-context>"
+        else
+            prev_context_section="\n\n<previous-session-context>\nPrevious session log found at: ${latest_log} (${log_lines} lines — too large to auto-load, read it manually if needed)\n</previous-session-context>"
+        fi
+    fi
+fi
+
 # Escape string for JSON embedding using bash parameter substitution.
 # Each ${s//old/new} is a single C-level pass - orders of magnitude
 # faster than the character-by-character loop this replaces.
@@ -35,7 +51,8 @@ escape_for_json() {
 
 using_superpowers_escaped=$(escape_for_json "$using_superpowers_content")
 warning_escaped=$(escape_for_json "$warning_message")
-session_context="<EXTREMELY_IMPORTANT>\nYou have superpowers.\n\n**Below is the full content of your 'superpowers:using-superpowers' skill - your introduction to using skills. For all other skills, use the 'Skill' tool:**\n\n${using_superpowers_escaped}\n\n${warning_escaped}\n</EXTREMELY_IMPORTANT>"
+prev_context_escaped=$(escape_for_json "$prev_context_section")
+session_context="<EXTREMELY_IMPORTANT>\nYou have superpowers.\n\n**Below is the full content of your 'superpowers:using-superpowers' skill - your introduction to using skills. For all other skills, use the 'Skill' tool:**\n\n${using_superpowers_escaped}\n\n${warning_escaped}${prev_context_escaped}\n</EXTREMELY_IMPORTANT>"
 
 # Output context injection as JSON.
 # Keep both shapes for compatibility:

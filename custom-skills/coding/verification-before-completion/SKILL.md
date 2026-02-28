@@ -107,28 +107,28 @@ Skip any step = lying, not verifying
 
 ## Why This Matters
 
-From 24 failure memories:
-- your human partner said "I don't believe you" - trust broken
-- Undefined functions shipped - would crash
-- Missing requirements shipped - incomplete features
-- Time wasted on false completion → redirect → rework
-- Violates: "Honesty is a core value. If you lie, you'll be replaced."
+Common failure patterns:
+- Claiming tests pass without running them → trust broken when they don't
+- Shipping undefined functions → crashes in production
+- Missing requirements shipped → incomplete features discovered by users
+- Time wasted on false completion → redirect → rework cycle
 
 ## When To Apply
 
-**ALWAYS before:**
-- ANY variation of success/completion claims
-- ANY expression of satisfaction
-- ANY positive statement about work state
+**ALWAYS before final completion claims:**
+- Claiming a task is done, fixed, complete, working, or passing
 - Committing, PR creation, task completion
-- Moving to next task
-- Delegating to agents
+- Moving to the next task
+
+**Does NOT apply to:**
+- Interim progress reports ("Task 1 done, working on Task 2")
+- Informational statements about what was changed
+- Questions or clarifications
 
 **Rule applies to:**
-- Exact phrases
+- Exact phrases ("it's done", "tests pass", "ready to merge")
 - Paraphrases and synonyms
-- Implications of success
-- ANY communication suggesting completion/correctness
+- Implications of final success
 
 ## The Bottom Line
 

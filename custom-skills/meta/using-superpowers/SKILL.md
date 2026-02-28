@@ -1,6 +1,6 @@
 ---
 name: using-superpowers
-description: Use when starting any conversation - establishes how to find and use skills, requiring Skill tool invocation before ANY response including clarifying questions
+description: Use at the start of every conversation to discover available skills before taking any action or asking clarifying questions
 ---
 
 <EXTREMELY-IMPORTANT>
@@ -76,48 +76,57 @@ These thoughts mean STOP—you're rationalizing:
 
 Skills are organized into categories. Invoke by name using the `Skill` tool (e.g. `superpowers:summarizing`).
 
+<!-- CATALOG_START -->
 **coding/** — Software development workflow
 | Skill | Use when |
 |-------|----------|
-| `brainstorming` | Planning any new feature or change — before writing code |
-| `writing-plans` | Design approved, need it broken into tasks |
-| `executing-plans` | Running a plan step-by-step with human checkpoints |
-| `test-driven-development` | Implementing any feature or bugfix |
-| `systematic-debugging` | Something is broken and root cause is unknown |
-| `verification-before-completion` | About to declare work done |
-| `requesting-code-review` | Code ready, requesting review |
-| `receiving-code-review` | Responding to review feedback |
+| `brainstorming` | Starting any new feature, component, behavior change, or modification — before writing any code. Required gate before implementation. |
+| `code-reviewer` | Dispatched as a subagent to perform structured code review — examines implementation against spec for compliance, then assesses code quality and best practices |
+| `executing-plans` | You have a written implementation plan to execute in a separate session with review checkpoints |
+| `investigating` | Asked to examine a codebase, folder, system, or set of files to produce structured findings — with no implementation goal yet. The investigation is the deliverable, not a step toward something else. |
+| `planning-sessions` | Facing multiple candidate features or tasks and needing to decide what order to tackle them — produces a prioritized backlog or sprint plan from a pool of work items |
+| `receiving-code-review` | Receiving code review feedback, before implementing suggestions, especially if feedback seems unclear or technically questionable - requires technical rigor and verification, not performative agreement or blind implementation |
+| `requesting-code-review` | Completing tasks, implementing major features, or before merging to verify work meets requirements |
+| `systematic-debugging` | Encountering any bug, test failure, or unexpected behavior, before proposing fixes |
+| `test-driven-development` | Implementing any feature or bugfix, before writing implementation code |
+| `verification-before-completion` | About to claim work is complete, fixed, or passing, before committing or creating PRs - requires running verification commands and confirming output before making any success claims; evidence before assertions always |
+| `writing-plans` | You have a spec or requirements for a multi-step task, before touching code |
 
 **agents/** — Agent orchestration
 | Skill | Use when |
 |-------|----------|
-| `subagent-driven-development` | Executing independent plan tasks in same session with auto-review |
-| `dispatching-parallel-agents` | Running multiple tasks concurrently across separate sessions |
+| `dispatching-parallel-agents` | Facing 2+ independent tasks that can be worked on without shared state or sequential dependencies |
+| `subagent-driven-development` | Executing implementation plans with independent tasks in the current session |
 
 **git/** — Version control
 | Skill | Use when |
 |-------|----------|
-| `using-git-worktrees` | Starting implementation that shouldn't touch main |
-| `finishing-a-development-branch` | Tasks done — merge, PR, keep, or discard |
+| `finishing-a-development-branch` | Implementation is complete, all tests pass, and you need to decide how to integrate the work - guides completion of development work by presenting structured options for merge, PR, or cleanup |
+| `using-git-worktrees` | Starting feature work that needs isolation from current workspace or before executing implementation plans - creates isolated git worktrees with smart directory selection and safety verification |
 
 **thinking/** — Intellectual engagement
 | Skill | Use when |
 |-------|----------|
-| `thinking-partner` | User wants opinions, ideas challenged, or to think out loud |
+| `decision-making` | Facing a choice between concrete options and needing a rigorous, structured process to evaluate and commit — especially for high-stakes, irreversible, or complex decisions |
+| `reasoning` | Facing a complex problem that needs structured thinking tools — first principles decomposition, pre-mortem analysis, assumption mapping, or inversion — to think more clearly before deciding or acting |
+| `thinking-partner` | The user wants opinions, wants to brainstorm non-technical ideas, presents a claim to be challenged, asks "what do you think", wants to think something through out loud, or wants genuine intellectual engagement rather than task execution |
 
 **qol/** — Output production
 | Skill | Use when |
 |-------|----------|
-| `researching` | Need to find and synthesize information from external sources |
-| `summarizing` | User has content and wants it condensed |
-| `explaining` | User needs a concept made understandable |
-| `drafting` | User needs a message, email, or communication written |
+| `documenting` | Writing technical documentation — READMEs, API docs, architecture decision records, CHANGELOG entries, or any persistent reference meant to be read by engineers later |
+| `drafting` | The user wants to write a message, email, Slack post, announcement, or any communication — especially when they describe what they want to say but need it shaped into the right form, tone, or structure |
+| `explaining` | The user asks to explain something, says "help me understand", "what is X", "break this down", "explain like I'm a [level]", or is clearly confused about a concept or system |
+| `researching` | The user asks to research a topic, find information, compare options, investigate a claim, or needs a synthesized answer from multiple sources rather than a direct response from existing knowledge |
+| `summarizing` | The user shares long content (article, document, thread, meeting notes, code) and wants key points, a tldr, a condensed version, or asks "what's important here" or "give me the gist |
 
 **meta/** — Skill system
 | Skill | Use when |
 |-------|----------|
-| `writing-skills` | Creating or editing a SKILL.md |
-| `capturing-context` | User explicitly says "extract the context" |
+| `capturing-context` | The user explicitly says "extract the context" or "extract context" — captures everything from the current session that the next conversation needs to continue without losing state |
+| `session-resume` | Starting a session and wanting to restore state from a previous session — loads the most recent context log, reconstructs working state, and confirms with the user before resuming |
+| `writing-skills` | Creating new skills, editing existing skills, or verifying skills work before deployment |
+<!-- CATALOG_END -->
 
 ## Skill Priority
 

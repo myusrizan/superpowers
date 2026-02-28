@@ -22,7 +22,16 @@ Load plan, review critically, execute tasks in batches, report for review betwee
 4. If no concerns: Create TodoWrite and proceed
 
 ### Step 2: Execute Batch
-**Default: First 3 tasks**
+
+**Batch size calibration:**
+| Task complexity | Batch size |
+|-----------------|-----------|
+| Quick (< 30 min each) | 3 tasks |
+| Medium (30–60 min each) | 2 tasks |
+| Complex (> 60 min each) | 1 task |
+| Significant external dependencies | 1 task |
+
+When uncertain, default to 1 task to get earlier feedback.
 
 For each task:
 1. Mark as in_progress

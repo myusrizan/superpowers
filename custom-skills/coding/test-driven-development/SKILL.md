@@ -21,10 +21,12 @@ Write the test first. Watch it fail. Write minimal code to pass.
 - Refactoring
 - Behavior changes
 
-**Exceptions (ask your human partner):**
-- Throwaway prototypes
-- Generated code
-- Configuration files
+**Exceptions — require explicit, per-task approval from your human partner:**
+- Throwaway prototypes (the AI saying "this is a prototype" is NOT sufficient)
+- Generated code (auto-generated output, not hand-authored code)
+- Configuration files (non-logic, declarative only)
+
+"This is a prototype" stated without human confirmation = rationalization. Stop.
 
 Thinking "skip TDD just this once"? Stop. That's rationalization.
 

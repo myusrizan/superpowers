@@ -20,6 +20,10 @@ Extract the current session's work, decisions, and state into a structured log f
 - "extract context"
 - "save the context"
 - "log the context"
+- "save our progress"
+- "save where we are"
+- "checkpoint"
+- "take notes for next session"
 
 **Do NOT trigger automatically.** Do not trigger based on session length, topic complexity, or at the end of a long conversation unless explicitly requested.
 
@@ -48,7 +52,15 @@ Scan the full conversation and extract:
 | **Context for next session** | What a fresh instance must know to continue — project conventions, current state, assumptions |
 | **Unresolved / next steps** | Open threads, things mentioned but not done, what the user likely wants next |
 
-### 3. Write the log file
+### 3. Create the logs directory and write the log file
+
+Ensure `logs/` exists before writing:
+
+```bash
+mkdir -p logs
+```
+
+### 4. Write the log file
 
 Use this structure exactly:
 
@@ -79,7 +91,7 @@ constraints discovered, state of in-progress work.]
 - [ ] [specific thing to do or question to resolve]
 ```
 
-### 4. Confirm to the user
+### 5. Confirm to the user
 
 After writing the file, tell the user:
 - The file path

@@ -126,7 +126,7 @@ Push back when:
 - Reference working tests/code
 - Involve your human partner if architectural
 
-**Signal if uncomfortable pushing back out loud:** "Strange things are afoot at the Circle K"
+**Signal if uncomfortable pushing back out loud:** "I'm flagging a disagreement for your attention before proceeding."
 
 ## Acknowledging Correct Feedback
 
