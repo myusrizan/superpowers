@@ -61,7 +61,7 @@ git check-ignore -q .worktrees 2>/dev/null || git check-ignore -q worktrees 2>/d
 
 **If NOT ignored:**
 
-Per Jesse's rule "Fix broken things immediately":
+Fix the environment before proceeding — never work around broken configurations:
 1. Add appropriate line to .gitignore
 2. Commit the change
 3. Proceed with worktree creation
@@ -95,38 +95,42 @@ esac
 
 # Create worktree with new branch
 git worktree add "$path" -b "$BRANCH_NAME"
-cd "$path"
+
+# IMPORTANT: Do NOT use `cd` — shell state does not persist between tool calls.
+# Record the full absolute path and prefix ALL subsequent commands with it:
+# cd "$path" && npm install
+# cd "$path" && npm test
 ```
 
 ### 3. Run Project Setup
 
-Auto-detect and run appropriate setup:
+Auto-detect and run appropriate setup. All commands must use the full worktree path — shell `cd` does not persist between tool calls:
 
 ```bash
 # Node.js
-if [ -f package.json ]; then npm install; fi
+if [ -f "$WORKTREE_PATH/package.json" ]; then cd "$WORKTREE_PATH" && npm install; fi
 
 # Rust
-if [ -f Cargo.toml ]; then cargo build; fi
+if [ -f "$WORKTREE_PATH/Cargo.toml" ]; then cd "$WORKTREE_PATH" && cargo build; fi
 
 # Python
-if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-if [ -f pyproject.toml ]; then poetry install; fi
+if [ -f "$WORKTREE_PATH/requirements.txt" ]; then cd "$WORKTREE_PATH" && pip install -r requirements.txt; fi
+if [ -f "$WORKTREE_PATH/pyproject.toml" ]; then cd "$WORKTREE_PATH" && poetry install; fi
 
 # Go
-if [ -f go.mod ]; then go mod download; fi
+if [ -f "$WORKTREE_PATH/go.mod" ]; then cd "$WORKTREE_PATH" && go mod download; fi
 ```
 
 ### 4. Verify Clean Baseline
 
-Run tests to ensure worktree starts clean:
+Run tests to ensure worktree starts clean. Use the full worktree path:
 
 ```bash
-# Examples - use project-appropriate command
-npm test
-cargo test
-pytest
-go test ./...
+# Examples - use project-appropriate command with full path
+cd "$WORKTREE_PATH" && npm test
+cd "$WORKTREE_PATH" && cargo test
+cd "$WORKTREE_PATH" && pytest
+cd "$WORKTREE_PATH" && go test ./...
 ```
 
 **If tests fail:** Report failures, ask whether to proceed or investigate.
@@ -183,8 +187,9 @@ You: I'm using the using-git-worktrees skill to set up an isolated workspace.
 [Check .worktrees/ - exists]
 [Verify ignored - git check-ignore confirms .worktrees/ is ignored]
 [Create worktree: git worktree add .worktrees/auth -b feature/auth]
-[Run npm install]
-[Run npm test - 47 passing]
+[Record WORKTREE_PATH=/Users/jesse/myproject/.worktrees/auth]
+[Run: cd "$WORKTREE_PATH" && npm install]
+[Run: cd "$WORKTREE_PATH" && npm test - 47 passing]
 
 Worktree ready at /Users/jesse/myproject/.worktrees/auth
 Tests passing (47 tests, 0 failures)
