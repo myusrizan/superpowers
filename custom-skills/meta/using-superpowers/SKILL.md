@@ -87,6 +87,7 @@ Skills are organized into categories. Invoke by name using the `Skill` tool (e.g
 | `planning-sessions` | Facing multiple candidate features or tasks and needing to decide what order to tackle them — produces a prioritized backlog or sprint plan from a pool of work items |
 | `receiving-code-review` | Receiving code review feedback, before implementing suggestions, especially if feedback seems unclear or technically questionable - requires technical rigor and verification, not performative agreement or blind implementation |
 | `requesting-code-review` | Completing tasks, implementing major features, or before merging to verify work meets requirements |
+| `security-review` | Reviewing code for security vulnerabilities — before deploying features that handle user input, authentication, authorization, secrets, or external data |
 | `systematic-debugging` | Encountering any bug, test failure, or unexpected behavior, before proposing fixes |
 | `test-driven-development` | Implementing any feature or bugfix, before writing implementation code |
 | `verification-before-completion` | About to claim work is complete, fixed, or passing, before committing or creating PRs - requires running verification commands and confirming output before making any success claims; evidence before assertions always |
@@ -124,6 +125,9 @@ Skills are organized into categories. Invoke by name using the `Skill` tool (e.g
 | Skill | Use when |
 |-------|----------|
 | `capturing-context` | The user explicitly says "extract the context" or "extract context" — captures everything from the current session that the next conversation needs to continue without losing state |
+| `prompt-efficiency` | Writing prompts, agent task descriptions, or skill instructions — to eliminate wasted tokens and get the right output in fewer rounds |
+| `prompt-generator` | Asked to generate a prompt, system prompt, briefing document, or reusable instruction set — produces a structured, efficient prompt saved to a markdown file |
+| `sensitive-data-guard` | Shared content may contain sensitive data — API keys, passwords, tokens, private keys, credentials, PII, or connection strings — before proceeding with any task involving that content |
 | `session-resume` | Starting a session and wanting to restore state from a previous session — loads the most recent context log, reconstructs working state, and confirms with the user before resuming |
 | `writing-skills` | Creating new skills, editing existing skills, or verifying skills work before deployment |
 <!-- CATALOG_END -->
