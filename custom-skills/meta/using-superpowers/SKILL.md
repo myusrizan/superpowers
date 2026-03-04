@@ -80,13 +80,21 @@ Skills are organized into categories. Invoke by name using the `Skill` tool (e.g
 **coding/** — Software development workflow
 | Skill | Use when |
 |-------|----------|
+| `api-design` | Designing or reviewing REST API endpoints — URL structure, HTTP semantics, response formats, pagination, versioning, or authentication headers |
 | `brainstorming` | Starting any new feature, component, behavior change, or modification — before writing any code. Required gate before implementation. |
 | `code-reviewer` | Dispatched as a subagent to perform structured code review — examines implementation against spec for compliance, then assesses code quality and best practices |
+| `database-migrations` | Modifying database schemas — adding/removing columns or tables, renaming fields, adding indexes, or performing data migrations — especially in production environments |
+| `e2e-testing` | Writing, organizing, or debugging end-to-end tests — browser automation, Page Object Model structure, flaky test management, or CI/CD integration for E2E suites |
+| `eval-harness` | Building, running, or designing evaluation systems for AI agent behavior — measuring reliability, detecting regressions, or implementing eval-driven development workflows |
 | `executing-plans` | You have a written implementation plan to execute in a separate session with review checkpoints |
 | `investigating` | Asked to examine a codebase, folder, system, or set of files to produce structured findings — with no implementation goal yet. The investigation is the deliverable, not a step toward something else. |
+| `onboarding-to-codebase` | Starting work on an unfamiliar codebase, repository, or service — to build a working mental model before making any changes |
+| `performance-profiling` | Code is too slow, uses too much memory, or has resource usage problems — before making any optimization changes |
 | `planning-sessions` | Facing multiple candidate features or tasks and needing to decide what order to tackle them — produces a prioritized backlog or sprint plan from a pool of work items |
 | `receiving-code-review` | Receiving code review feedback, before implementing suggestions, especially if feedback seems unclear or technically questionable - requires technical rigor and verification, not performative agreement or blind implementation |
+| `refactoring` | Improving the structure, clarity, or design of existing code without changing its observable behavior — before making structural changes to working code |
 | `requesting-code-review` | Completing tasks, implementing major features, or before merging to verify work meets requirements |
+| `search-first` | About to implement new functionality, add a dependency, or create a utility — before writing any code, to search for existing solutions that may already solve the problem |
 | `security-review` | Reviewing code for security vulnerabilities — before deploying features that handle user input, authentication, authorization, secrets, or external data |
 | `systematic-debugging` | Encountering any bug, test failure, or unexpected behavior, before proposing fixes |
 | `test-driven-development` | Implementing any feature or bugfix, before writing implementation code |
@@ -96,7 +104,9 @@ Skills are organized into categories. Invoke by name using the `Skill` tool (e.g
 **agents/** — Agent orchestration
 | Skill | Use when |
 |-------|----------|
+| `autonomous-loops` | Designing Claude to run autonomously in loops — automated pipelines, continuous PR workflows, multi-agent orchestration, or recurring background tasks |
 | `dispatching-parallel-agents` | Facing 2+ independent tasks that can be worked on without shared state or sequential dependencies |
+| `iterative-retrieval` | A subagent needs to gather relevant context before starting work — especially when the relevant files are not known upfront and broad initial context would exceed limits |
 | `subagent-driven-development` | Executing implementation plans with independent tasks in the current session |
 
 **git/** — Version control
@@ -129,6 +139,7 @@ Skills are organized into categories. Invoke by name using the `Skill` tool (e.g
 | `prompt-generator` | Asked to generate a prompt, system prompt, briefing document, or reusable instruction set — produces a structured, efficient prompt saved to a markdown file |
 | `sensitive-data-guard` | Shared content may contain sensitive data — API keys, passwords, tokens, private keys, credentials, PII, or connection strings — before proceeding with any task involving that content |
 | `session-resume` | Starting a session and wanting to restore state from a previous session — loads the most recent context log, reconstructs working state, and confirms with the user before resuming |
+| `skill-stocktake` | Auditing the current skill system — evaluating skill quality, identifying overlaps or gaps, retiring outdated skills, or planning the next round of skill improvements |
 | `writing-skills` | Creating new skills, editing existing skills, or verifying skills work before deployment |
 <!-- CATALOG_END -->
 
