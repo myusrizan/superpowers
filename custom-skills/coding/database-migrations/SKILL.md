@@ -132,6 +132,63 @@ def run_migration_in_batches(batch_size=1000):
 
 ---
 
+## PostgreSQL Advanced Patterns
+
+### UPSERT (Insert or Update)
+
+```sql
+-- Insert new row, or update on conflict
+INSERT INTO users (id, email, updated_at)
+VALUES ($1, $2, NOW())
+ON CONFLICT (id)
+DO UPDATE SET
+  email = EXCLUDED.email,
+  updated_at = EXCLUDED.updated_at;
+```
+
+`EXCLUDED` refers to the values that were proposed for insertion. This is atomic — no race condition between checking existence and inserting.
+
+### Queue Processing with SKIP LOCKED
+
+For job queues, skip advisory locks entirely. `FOR UPDATE SKIP LOCKED` lets multiple workers claim different rows concurrently without blocking each other:
+
+```sql
+BEGIN;
+
+-- Claim the next available job (non-blocking to other workers)
+SELECT id, payload
+FROM jobs
+WHERE status = 'pending'
+ORDER BY created_at
+LIMIT 1
+FOR UPDATE SKIP LOCKED;
+
+-- Process the job in application code, then:
+UPDATE jobs SET status = 'completed', completed_at = NOW() WHERE id = $1;
+
+COMMIT;
+```
+
+Multiple workers run this concurrently — each claims a different row. No deadlocks. No polling delay. No missed jobs.
+
+### Row-Level Security (RLS) Enforcement
+
+After setting up RLS policies, always verify them with a restricted role before shipping:
+
+```sql
+-- Verify as restricted user
+SET role = 'app_user';
+SET app.current_user_id = '123';
+
+SELECT * FROM orders;  -- Should only return orders owned by user 123
+
+RESET role;
+```
+
+Never rely on application-level WHERE clauses alone for tenant isolation — enforce at the database layer.
+
+---
+
 ## Multi-Tool Reference
 
 ### Prisma

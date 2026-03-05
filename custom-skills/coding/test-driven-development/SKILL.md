@@ -46,6 +46,20 @@ Write code before the test? Delete it. Start over.
 
 Implement fresh from tests. Period.
 
+## Step 0: Define User Intent (Optional)
+
+Before writing the failing test, express the scenario as a user journey:
+
+**Format:** "As a [role], I want [action], so that [benefit]."
+
+Examples:
+- "As an API consumer, I want pagination on the users endpoint, so that I don't load all records at once."
+- "As a logged-in user, I want to reset my password by email, so that I can recover access if I forget it."
+
+This keeps tests anchored to behavior, not implementation detail. Skip for unit tests of internal functions. Use it for feature-level or integration tests where the user-facing intent might not be obvious from the test name alone.
+
+---
+
 ## Red-Green-Refactor
 
 ```dot

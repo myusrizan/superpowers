@@ -99,6 +99,34 @@ After writing the file, tell the user:
 
 ---
 
+## Context Compaction (Separate from Logging)
+
+Saving a log file and compacting the in-session context are different actions with different purposes:
+
+| Action | What it does | When |
+|--------|-------------|------|
+| Save log (this skill) | Writes session state to `logs/` for future sessions | End of session, on request |
+| `/compact` | Reduces in-session memory to free token budget | Mid-session, at phase boundaries |
+
+### When to compact (during a session)
+
+Compact at **task phase boundaries**, not arbitrarily:
+
+- After completing research/investigation, before starting implementation
+- After finishing implementation, before starting review or verification
+- When switching to an unrelated major topic
+- When approaching ~50 tool calls in a session (context pressure builds)
+
+**Do NOT compact mid-task** (e.g., mid-file-write, mid-debug). Compacting mid-task loses working context for the very thing you're doing. The boundary rule keeps completed work and discards intermediate paths that are no longer needed.
+
+### What compaction preserves
+
+After `/compact`, Claude retains: CLAUDE.md instructions, active TodoWrite tasks, memory files, the current file being edited.
+
+It discards: conversation history, intermediate reasoning, search results from earlier in the session. Save anything critical to a file before compacting — do not rely on conversation memory surviving a compact.
+
+---
+
 ## What NOT to Include
 
 - Step-by-step conversation transcript

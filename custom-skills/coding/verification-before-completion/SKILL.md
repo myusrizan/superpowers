@@ -130,6 +130,35 @@ Common failure patterns:
 - Paraphrases and synonyms
 - Implications of final success
 
+## Structured Report Format
+
+When reporting verification results to the user, use this format:
+
+| Phase | Check | Command (example) | Status |
+|-------|-------|-------------------|--------|
+| Build | Compiles without errors | `npm run build` / `cargo build` / `go build` | ✓ / ✗ |
+| Types | No type errors | `tsc --noEmit` | ✓ / ✗ |
+| Lint | No lint violations | `eslint` / `ruff` / `golangci-lint` | ✓ / ✗ |
+| Tests | All pass, no regressions | `npm test` / `pytest` / `go test ./...` | ✓ / ✗ |
+| Diff | Changes match stated intent | `git diff HEAD~1` | ✓ / ✗ |
+
+**Rules:**
+- Only include phases applicable to the project
+- Skip phases where no tooling exists — don't fabricate checks
+- Mark as **NOT RUN** if you could not run the check, not ✓
+- Always include actual numbers: "47 passed, 0 failed" not just "✓"
+
+**Example report:**
+```
+Verification complete:
+- Build: ✓ (0 errors)
+- Types: ✓ (0 type errors)
+- Tests: ✓ (47 passed, 0 failed)
+- Diff: ✓ (changes match task spec — added 1 endpoint, updated 1 test)
+```
+
+---
+
 ## The Bottom Line
 
 **No shortcuts for verification.**

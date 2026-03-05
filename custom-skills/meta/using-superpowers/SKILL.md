@@ -82,12 +82,15 @@ Skills are organized into categories. Invoke by name using the `Skill` tool (e.g
 |-------|----------|
 | `api-design` | Designing or reviewing REST API endpoints — URL structure, HTTP semantics, response formats, pagination, versioning, or authentication headers |
 | `brainstorming` | Starting any new feature, component, behavior change, or modification — before writing any code. Required gate before implementation. |
+| `ci-cd-pipeline` | Designing, debugging, or reviewing CI/CD pipelines — pipeline structure, caching strategy, secrets management, deployment strategies, or troubleshooting failed pipeline runs |
 | `code-reviewer` | Dispatched as a subagent to perform structured code review — examines implementation against spec for compliance, then assesses code quality and best practices |
 | `database-migrations` | Modifying database schemas — adding/removing columns or tables, renaming fields, adding indexes, or performing data migrations — especially in production environments |
+| `dependency-management` | Evaluating whether to add a new dependency, auditing existing dependencies for security issues, managing version pinning strategy, or resolving dependency conflicts |
 | `e2e-testing` | Writing, organizing, or debugging end-to-end tests — browser automation, Page Object Model structure, flaky test management, or CI/CD integration for E2E suites |
 | `eval-harness` | Building, running, or designing evaluation systems for AI agent behavior — measuring reliability, detecting regressions, or implementing eval-driven development workflows |
 | `executing-plans` | You have a written implementation plan to execute in a separate session with review checkpoints |
 | `investigating` | Asked to examine a codebase, folder, system, or set of files to produce structured findings — with no implementation goal yet. The investigation is the deliverable, not a step toward something else. |
+| `observability` | Adding logging, metrics, or tracing to a system; reviewing what a service emits in production; or designing alerting thresholds and on-call policies |
 | `onboarding-to-codebase` | Starting work on an unfamiliar codebase, repository, or service — to build a working mental model before making any changes |
 | `performance-profiling` | Code is too slow, uses too much memory, or has resource usage problems — before making any optimization changes |
 | `planning-sessions` | Facing multiple candidate features or tasks and needing to decide what order to tackle them — produces a prioritized backlog or sprint plan from a pool of work items |
