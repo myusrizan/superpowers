@@ -52,6 +52,11 @@ Trigger search-first when you are about to:
 4. DECIDE
    Adopt / Extend / Compose / Build
           ↓
+4a. FETCH CURRENT DOCS (if Adopting/Extending)
+    Add "use context7" to your prompt — resolves library name → fetches
+    current, version-specific docs → injects into context.
+    Do not rely on training data alone: APIs change between versions.
+          ↓
 5. IMPLEMENT
    Minimal integration, not from scratch
 ```
@@ -123,10 +128,12 @@ Before writing any utility or adding functionality, run through this sequence:
 ### AI / LLM Integration
 | Need | Search term |
 |------|-------------|
-| Claude SDK | Check Context7 for latest docs |
+| Claude SDK | `@anthropic-ai/sdk`, `anthropic` — use Context7 for current docs |
 | Prompt management | MCP servers first |
 | Document processing | `unstructured`, `pdfplumber`, `mammoth` |
 | Embeddings | `sentence-transformers`, `langchain` |
+
+> **Context7 applies to any library, not just AI SDKs.** Whenever you adopt a package, add `use context7` to your next prompt to fetch version-accurate docs before implementing. Resolves library names automatically.
 
 ### Data & APIs
 | Need | Search term |

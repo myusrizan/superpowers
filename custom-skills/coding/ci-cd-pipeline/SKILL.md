@@ -229,6 +229,30 @@ Gradually increase: 5% → 20% → 50% → 100% once metrics confirm stability.
 
 ## Debugging Failed Pipelines
 
+### Inspecting Runs with `gh`
+
+Use the GitHub CLI to inspect runs without leaving the terminal:
+
+```bash
+# List recent runs for current branch
+gh run list --branch=$(git branch --show-current) --limit=10
+
+# Watch a run in real-time
+gh run watch <run-id>
+
+# View logs for only the failed steps
+gh run view <run-id> --log-failed
+
+# Re-run only the failed jobs (not the whole workflow)
+gh run rerun <run-id> --failed
+
+# View a specific job within a run
+gh run view <run-id> --job=<job-name>
+
+# Open in browser
+gh run view <run-id> --web
+```
+
 ### Process
 
 1. **Read from the top of the failure.** Error messages are often buried under stack traces. The first failure in the log is usually the root cause.

@@ -196,4 +196,4 @@ Retire verification-loop.
 - **Reasons must be self-contained.** A verdict reason of "unchanged" or "seems fine" is not acceptable. State the specific evidence.
 - **Retire requires confirmation.** Don't delete a skill during the audit — flag it for retirement, then confirm before removing.
 - **Update trigger conditions when fixing overlaps.** If two skills overlap due to ambiguous descriptions, fixing the description is better than merging.
-- **Keep the stocktake report.** Save the report in `findings/` or `logs/` — it's a record of decisions made.
+- **Keep the stocktake report.** Save the report in `investigation-report/` (increment the number prefix, e.g., `07-...`) — it's a record of decisions made, not an external repo investigation (`findings/` is reserved for those).

@@ -183,6 +183,9 @@ Done!
 - Subagent gets complete information upfront
 - Questions surfaced before work begins (not after)
 
+**Context budget principle:**
+The controller (orchestrator) should stay light — reading plans, extracting task text, routing reviews. It should NOT read implementation files, run tests, or accumulate heavy context. Each subagent gets a fresh, full context window for its task. The controller spends ~15% of its context coordinating; each subagent spends 100% of its context executing. Violating this inverts the benefit: a context-heavy controller produces context-starved subagents.
+
 **Quality gates:**
 - Self-review catches issues before handoff
 - Two-stage review: spec compliance, then code quality

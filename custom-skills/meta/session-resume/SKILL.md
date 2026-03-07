@@ -30,9 +30,7 @@ Do NOT use when:
 
 ### Step 1: Find the Log
 
-Check if a log was already injected by session-start (it will appear in `<previous-session-context>` tags).
-
-If not, scan for the most recent log:
+Scan for the most recent log:
 
 ```bash
 ls -t logs/*.md 2>/dev/null | head -5
@@ -117,6 +115,6 @@ If the log doesn't match the current state of the codebase (files that should ex
 **Session continuity loop:**
 ```
 Session ends → capturing-context → logs/YYYY-MM-DD-HH-MM.md
-Next session starts → session-start hook auto-loads log
+Next session starts → session-resume reads most recent log from logs/
 session-resume → restores state and confirms → work continues
 ```

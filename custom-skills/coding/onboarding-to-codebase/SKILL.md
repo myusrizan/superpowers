@@ -138,6 +138,24 @@ Save this to `docs/codebase-notes.md` or share it directly in the session before
 
 ---
 
+## Parallel Mapping (Large or Brownfield Codebases)
+
+For codebases with 50+ files or where a full sequential read would take too long, dispatch specialized parallel agents to produce structured documentation simultaneously:
+
+```
+Agent 1 → STACK.md       (languages, frameworks, key dependencies, versions)
+Agent 2 → ARCHITECTURE.md (high-level design, module boundaries, data flow)
+Agent 3 → CONVENTIONS.md  (naming, file structure, patterns used consistently)
+Agent 4 → INTEGRATIONS.md (external services, APIs, databases, config requirements)
+Agent 5 → TESTING.md      (test framework, coverage areas, how to run tests)
+```
+
+Each agent writes directly to `docs/codebase/`. The controller receives only confirmations — it does not accumulate agent output. After all complete, read the produced docs as Layer 1–4 replacement.
+
+**When to use parallel mapping vs. sequential layers:**
+- Sequential (default): codebase is small-to-medium, task is focused
+- Parallel mapping: large brownfield project, onboarding a new team member, or full-codebase audit
+
 ## Hard Rules
 
 - **Do not make any changes before completing Layer 4.** Changes made without understanding the structure land in the wrong place.

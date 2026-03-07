@@ -121,6 +121,34 @@ Return: Summary of what you found and what you fixed.
 **❌ Vague output:** "Fix it" - you don't know what changed
 **✅ Specific:** "Return summary of root cause and changes"
 
+## Wave Execution for Mixed-Dependency Tasks
+
+When tasks are not all independent — some depend on results from others — group them into dependency waves and run each wave in parallel:
+
+```
+Wave 1: All tasks with no dependencies → run in parallel
+Wave 2: All tasks that depend only on Wave 1 → run in parallel after Wave 1
+Wave 3: All tasks that depend on Wave 2 → run in parallel after Wave 2
+```
+
+**Example: building a full-stack feature**
+```
+Wave 1 (parallel): User model, Product model, Auth service
+         ↓ (all complete)
+Wave 2 (parallel): Orders API, Cart API  ← both need models from Wave 1
+         ↓ (all complete)
+Wave 3 (parallel): Checkout UI, Payment UI  ← both need APIs from Wave 2
+```
+
+**How to identify waves:**
+1. List all tasks
+2. For each task, identify what it depends on
+3. Tasks with no dependencies → Wave 1
+4. Tasks whose dependencies are all in Wave 1 → Wave 2
+5. Continue until all tasks are assigned
+
+**Rule:** Never merge waves. If Wave 2 tasks finish early, do not start Wave 3 until all Wave 2 tasks are complete — partial dependency satisfaction is still unsatisfied.
+
 ## When NOT to Use
 
 **Related failures:** Fixing one might fix others - investigate together first

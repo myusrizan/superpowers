@@ -126,8 +126,8 @@ pip install pylint
 pylint --disable=all --enable=W0611 src/
 
 # Manual search (any language)
-grep -r "import.*lodash" src/          # Find if lodash is used
-grep -r "from.*lodash" src/
+rg "import.*lodash" src/          # Find if lodash is used
+rg "from.*lodash" src/
 ```
 
 Before removing:

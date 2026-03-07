@@ -94,6 +94,31 @@ git commit -m "feat: add specific feature"
 - Reference relevant skills with @ syntax
 - DRY, YAGNI, TDD, frequent commits
 
+## Plan Verification
+
+After saving the plan, dispatch a plan-checker subagent to verify it before presenting to the user. The controller passes the full plan text — the checker does not read the file.
+
+**Checker prompt:**
+```
+You are a plan verifier. Review this implementation plan and identify structural issues only — not style preferences.
+
+Check for:
+1. **Atomicity** — each task is one committable unit (write test → verify fail → implement → verify pass → commit). Flag tasks that bundle multiple independent features.
+2. **Dependency ordering** — if Task N depends on Task M, M must come first. Flag any out-of-order tasks.
+3. **Completeness** — do the tasks cover the stated goal and architecture? Flag obvious missing tasks (e.g., goal says "with auth" but no auth task exists).
+4. **TDD compliance** — each task must have: write failing test → run to confirm fail → implement → run to confirm pass → commit. Flag tasks missing these steps.
+
+For each issue: state the task number, the problem, and a specific fix.
+If no issues: respond "Plan verified. No structural issues found."
+
+<plan>
+[full plan text]
+</plan>
+```
+
+**If issues found:** Fix them in the saved plan file before proceeding.
+**If no issues:** Proceed to execution handoff.
+
 ## Execution Handoff
 
 After saving the plan, offer execution choice:

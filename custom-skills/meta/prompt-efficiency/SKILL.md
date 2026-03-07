@@ -157,6 +157,69 @@ Return: root cause (1 sentence) + what you changed (1 sentence).
 
 ---
 
+## Domain Patterns
+
+Front-load everything a domain requires in the **first message**. These are the most common sources of unnecessary follow-up rounds.
+
+### Coding
+
+Bad opening:
+```
+❌ "Can you help me fix this bug?"
+   → Follow-up needed: what file? what error? what environment?
+```
+
+Good opening (everything in one message):
+```
+✅ Language/runtime: Node 20, TypeScript 5.4
+   File: src/auth/login.ts:78
+   Error: "Cannot read properties of undefined (reading 'token')"
+   Reproduction: call login() with no session cookie set
+   Constraint: touch only src/auth/login.ts
+   Goal: fix the crash. Done when: unit test passes, no new deps.
+```
+
+Rule: provide environment, file path, full error message, reproduction step, and constraints in the **opening message**.
+
+### Writing
+
+Bad opening:
+```
+❌ "Edit this for me." [pastes text]
+   → Follow-up needed: tone? audience? scope of changes?
+```
+
+Good opening:
+```
+✅ Audience: senior engineers, no background in ML
+   Tone: direct, no hedging
+   Goal: tighten the intro paragraph — cut to ≤3 sentences
+   Constraint: preserve all technical claims exactly
+   [full text]
+```
+
+Rule: state audience, tone, scope, and constraints **before** the content. Submit the complete text — never ask for partial edits then paste more.
+
+### Research
+
+Bad opening:
+```
+❌ "Research this topic for me."
+   → Follow-up needed: scope? output format? what you already know?
+```
+
+Good opening:
+```
+✅ Question: Which Postgres index type is fastest for prefix-search on a 10M-row VARCHAR column?
+   Context: using Postgres 16, query pattern is LIKE 'prefix%', write-heavy table
+   Already know: GIN supports full-text; unsure about GiST vs. BRIN for this pattern
+   Output: recommendation + 1-paragraph rationale + one concrete benchmark reference
+```
+
+Rule: define the exact question, provide all relevant constraints/context you have, state what you already know (prevents re-explaining the obvious), and specify output format upfront.
+
+---
+
 ## Efficiency Checklist
 
 Before sending a prompt:
@@ -167,3 +230,4 @@ Before sending a prompt:
 - [ ] Am I repeating context already in scope?
 - [ ] Could I batch this with other related requests?
 - [ ] Is "done" defined?
+- [ ] (Domain check) Have I front-loaded all env/audience/scope context so no follow-up round is needed?

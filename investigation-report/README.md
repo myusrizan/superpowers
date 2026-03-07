@@ -14,6 +14,7 @@
 | [03-critical-flaws.md](03-critical-flaws.md) | Open bugs and issues with concrete fixes |
 | [04-optimization-recommendations.md](04-optimization-recommendations.md) | Current priority improvements |
 | [05-missing-skills-and-gaps.md](05-missing-skills-and-gaps.md) | Remaining gaps and strategic observations |
+| [07-post-expansion-audit.md](07-post-expansion-audit.md) | 51-skill audit: FLAW-21–23 resolved, required tools table, autonomous-loops YELLOW |
 
 ---
 
@@ -24,6 +25,7 @@
 | 2026-02-28 | Initial full audit | 20 skills, 18 flaws, 12 optimizations | All flaws fixed except FLAW-17; all optimizations applied |
 | 2026-03-07 | Post-expansion update | 47 skills (added 18 from repos: affaan-m/everything-claude-code, anthropics/claude-plugins-official) | Descriptions updated with "pushy" principle; catalog now auto-generated |
 | 2026-03-07 (today) | Current audit + optimization pass | 48 skills | FLAW-18 through FLAW-20 resolved; OPT-A through OPT-E applied |
+| 2026-03-07 (session 3) | Post-expansion audit + GSD investigation | 51 skills | FLAW-21–23 resolved; writing-plans plan-verification added; required tools compiled |
 
 ---
 
@@ -48,7 +50,7 @@ All 18 flaws from the original 2026-02-28 audit are resolved except FLAW-17 (int
 |---|-------|----------|--------|
 | FLAW-17 | `writing-skills` verbosity — very long session-load skill | Low | Intentionally deferred |
 
-All other flaws from this audit are **resolved**. See `03-critical-flaws.md` for details.
+All other flaws from all audits are **resolved**. See `03-critical-flaws.md` for prior flaws; `07-post-expansion-audit.md` for FLAW-21 through FLAW-23.
 
 ### Optimizations Applied This Audit
 
