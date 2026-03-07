@@ -198,7 +198,8 @@ This prevents future developers (or future you) from repeating the same research
 
 - **Jumping to code:** Starting to implement before searching. The most common and most expensive mistake.
 - **Ignoring MCP:** Not checking if an MCP server already provides the exact capability needed.
-- **Search theater:** Running one search with poor keywords, finding nothing, declaring "nothing exists."
+- **Search theater:** Running one search with poor keywords, finding nothing, declaring "nothing exists." A valid search checks: existing project code, stdlib, and the package registry. All three.
+- **Ignoring your own findings:** Completing the search workflow, discovering a better option, then silently proceeding with the original plan anyway. The search result is the input to the decision — not a formality to get past.
 - **Over-customizing:** Wrapping a library so heavily that it loses its benefits and becomes harder to upgrade.
 - **Dependency bloat:** Installing a 500kb library for one 20-line function.
 - **Ignoring license:** Using GPL code in a commercial project without checking implications.
@@ -208,6 +209,9 @@ This prevents future developers (or future you) from repeating the same research
 ## Hard Rules
 
 - **Search before writing.** This is the rule, not a suggestion.
+- **Search the project first, then the ecosystem.** Always check existing dependencies and utilities before searching external registries. Adding a duplicate of what's already installed is worse than not searching at all.
+- **A valid search covers all three:** (1) existing project dependencies/utilities, (2) the language standard library, (3) the primary package registry. One weak query with no results is not a valid search — it's search theater.
+- **Surface findings before proceeding.** If search reveals a recommended solution is deprecated, has known issues, or is superseded by a better option, report this before adopting. Do not silently install a library the workflow flagged as suboptimal.
 - **Document "build" decisions.** If you searched and found nothing, record what you searched for and why you built.
 - **Check the license.** Before adopting, confirm the license is compatible with the project.
 - **Prefer small, focused packages.** A package that does one thing well beats a large framework for a small need.

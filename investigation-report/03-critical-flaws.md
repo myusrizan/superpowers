@@ -1,0 +1,41 @@
+# Custom Skills System — Part 3: Critical Flaws
+
+> Updated: 2026-03-07
+> Historical context: 18 flaws identified in 2026-02-28 audit. All resolved except FLAW-17. FLAW-18 through FLAW-20 from the 2026-03-07 audit are all resolved.
+
+---
+
+## Open Flaws
+
+---
+
+### FLAW-17: `writing-skills` verbosity
+**Severity:** Low
+**Status:** Open — intentionally deferred
+**Skill:** `meta/writing-skills`
+
+**Problem:** `writing-skills` is the longest skill in the system. It's loaded at session start (referenced by `using-superpowers`). The length adds to context load every session, even when no skill-writing work is planned.
+
+**Why deferred:** It's a session-load-only skill — cost is bounded (one-time load). Content is all necessary; there's no obvious way to shorten it without losing the quality assurance framework. Deferred until a pattern emerges for conditional skill loading.
+
+**Fix when ready:** Split into `writing-skills` (summary/principles only) + `writing-skills/detail.md` (full TDD process), loaded on demand.
+
+---
+
+## Resolved Flaws (Historical Reference)
+
+All 17 flaws from the 2026-02-28 audit were resolved in the 2026-02-28 sessions. Key fixes:
+
+| Flaw | Fix |
+|------|-----|
+| FLAW-01: requesting-code-review ghost skill | Task tool + template pattern |
+| FLAW-02: brainstorming dead references | Dead refs removed, description fixed |
+| FLAW-03: using-git-worktrees cd persistence | WORKTREE_PATH variable pattern |
+| FLAW-04: catalog drift | build-skills.sh auto-generation implemented |
+| FLAW-05: logs/ directory missing | mkdir -p logs added |
+| FLAW-06: capturing-context missing trigger phrases | "save progress", "checkpoint" added |
+| FLAW-07: subagent review loop termination | Max 3 cycles rule added |
+| FLAW-08 through FLAW-16 | Fixed in 2026-02-28 sessions |
+| FLAW-18: New skills not pressure-tested | `search-first` and `ui-ux-design` tested and patched (YELLOW → GREEN). Reference skills exempt per `writing-skills` guidance. `database-migrations` deferred (low-use). |
+| FLAW-19: `code-reviewer` architecture confusion | Stale — `code-reviewer` was already a proper registered skill with full frontmatter and two-phase workflow. No action needed. |
+| FLAW-20: `ui-ux-design` description clarity | Description updated to explicitly exclude general code quality review; boundary with `code-reviewer` made explicit. |

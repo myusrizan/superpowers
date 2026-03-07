@@ -106,6 +106,14 @@ if new_content != original:
     with open(catalog_file, 'w') as f:
         f.write(new_content)
     print("build-skills: Catalog regenerated in using-superpowers/SKILL.md", file=sys.stderr)
+
+# Warn if skill count is approaching cognitive overload threshold
+skill_count = sum(1 for line in catalog_lines if line.startswith('| `'))
+WARN_THRESHOLD = 60
+if skill_count >= WARN_THRESHOLD:
+    print(f"build-skills: WARNING — {skill_count} skills in catalog (threshold: {WARN_THRESHOLD}). Consider splitting catalog into core/extended.", file=sys.stderr)
+else:
+    print(f"build-skills: {skill_count} skills in catalog.", file=sys.stderr)
 PYEOF
 fi
 
