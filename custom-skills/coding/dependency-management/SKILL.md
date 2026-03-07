@@ -1,6 +1,6 @@
 ---
 name: dependency-management
-description: Use when evaluating whether to add a new dependency, auditing existing dependencies for security issues, managing version pinning strategy, or resolving dependency conflicts
+description: Use when evaluating whether to add a new dependency, auditing existing dependencies for security issues, managing version pinning, or resolving conflicts. Invoke whenever someone says "install X", "add X dependency", "use X library", or asks to upgrade a package.
 ---
 
 # Dependency Management

@@ -1,6 +1,6 @@
 ---
 name: writing-plans
-description: Use when you have a spec or requirements for a multi-step task, before touching code
+description: Use when you have a spec or requirements for a multi-step task, before touching code. Invoke before starting any multi-file change, even if the user says "just do it".
 ---
 
 # Writing Plans

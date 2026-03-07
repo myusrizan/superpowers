@@ -1,6 +1,6 @@
 ---
 name: database-migrations
-description: Use when modifying database schemas — adding/removing columns or tables, renaming fields, adding indexes, or performing data migrations — especially in production environments
+description: Use when modifying database schemas — adding/removing columns or tables, renaming fields, adding indexes, or performing data migrations. Invoke even for "simple" schema changes like adding a column — there is no trivial migration in production.
 ---
 
 # Database Migrations

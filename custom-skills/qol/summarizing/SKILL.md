@@ -1,6 +1,6 @@
 ---
 name: summarizing
-description: Use when the user shares long content (article, document, thread, meeting notes, code) and wants key points, a tldr, a condensed version, or asks "what's important here" or "give me the gist"
+description: Use when the user shares long content and wants key points, a tldr, or a condensed version. Invoke whenever content is shared that's longer than a person would want to read in full — meetings, threads, articles, PRs, docs.
 ---
 
 # Summarizing

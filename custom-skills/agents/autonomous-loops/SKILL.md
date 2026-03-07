@@ -1,6 +1,6 @@
 ---
 name: autonomous-loops
-description: Use when designing Claude to run autonomously in loops — automated pipelines, continuous PR workflows, multi-agent orchestration, or recurring background tasks
+description: Use when designing Claude to run autonomously in loops — automated pipelines, continuous PR workflows, or multi-agent orchestration. Invoke when designing automated scripts, batch processing, recurring tasks, or any workflow that loops without user input.
 ---
 
 # Autonomous Loops

@@ -1,6 +1,6 @@
 ---
 name: observability
-description: Use when adding logging, metrics, or tracing to a system; reviewing what a service emits in production; or designing alerting thresholds and on-call policies
+description: Use when adding logging, metrics, or tracing to a system; reviewing what a service emits in production; or designing alerting. Invoke whenever someone mentions logs, metrics, alerts, dashboards, monitoring, tracing, Datadog, CloudWatch, or Prometheus.
 ---
 
 # Observability

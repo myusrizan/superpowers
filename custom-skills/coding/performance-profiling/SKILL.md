@@ -1,6 +1,6 @@
 ---
 name: performance-profiling
-description: Use when code is too slow, uses too much memory, or has resource usage problems — before making any optimization changes
+description: Use when code is too slow, uses too much memory, or has resource usage problems. Invoke whenever someone says "this is slow", "optimize this", "reduce memory usage", or notices unexpected latency.
 ---
 
 # Performance Profiling

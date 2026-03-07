@@ -1,6 +1,6 @@
 ---
 name: researching
-description: Use when the user asks to research a topic, find information, compare options, investigate a claim, or needs a synthesized answer from multiple sources rather than a direct response from existing knowledge
+description: Use when the user asks to research a topic, compare options, or investigate a claim. Invoke whenever comparing options, investigating a claim, or needing a synthesized answer the user can rely on — even if they don't say "research this".
 ---
 
 # Researching

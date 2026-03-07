@@ -1,6 +1,6 @@
 ---
 name: security-review
-description: Use when reviewing code for security vulnerabilities — before deploying features that handle user input, authentication, authorization, secrets, or external data
+description: Use when reviewing code for security vulnerabilities — before deploying features that handle user input, authentication, authorization, secrets, or external data. Invoke whenever code touches input validation, file uploads, tokens, database queries, or external APIs — even if security isn't explicitly mentioned.
 ---
 
 # Security Review

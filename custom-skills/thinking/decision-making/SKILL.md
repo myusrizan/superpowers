@@ -1,6 +1,6 @@
 ---
 name: decision-making
-description: Use when facing a choice between concrete options and needing a rigorous, structured process to evaluate and commit — especially for high-stakes, irreversible, or complex decisions
+description: Use when facing a choice between concrete options and needing a rigorous, structured process to evaluate and commit. Invoke for any significant choice, even when the user just asks "which should I use?" or "what's better, X or Y?"
 ---
 
 # Decision-Making

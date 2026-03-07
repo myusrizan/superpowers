@@ -1,6 +1,6 @@
 ---
 name: documenting
-description: Use when writing technical documentation — READMEs, API docs, architecture decision records, CHANGELOG entries, or any persistent reference meant to be read by engineers later
+description: Use when writing technical documentation — READMEs, API docs, architecture decision records, or CHANGELOG entries. Invoke whenever someone says "add a README", "write docs for this", "document this function", or "add a changelog entry".
 ---
 
 # Documenting

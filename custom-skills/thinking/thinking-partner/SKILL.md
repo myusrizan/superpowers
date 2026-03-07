@@ -1,6 +1,6 @@
 ---
 name: thinking-partner
-description: Use when the user wants opinions, wants to brainstorm non-technical ideas, presents a claim to be challenged, asks "what do you think", wants to think something through out loud, or wants genuine intellectual engagement rather than task execution
+description: Use when the user wants opinions, wants to brainstorm non-technical ideas, presents a claim to be challenged, or asks "what do you think". Invoke when the user seems to be wrestling with an idea, thinking out loud, or wants a genuine reaction rather than task execution.
 ---
 
 # Thinking Partner

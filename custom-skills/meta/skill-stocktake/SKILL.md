@@ -1,6 +1,6 @@
 ---
 name: skill-stocktake
-description: Use when auditing the current skill system — evaluating skill quality, identifying overlaps or gaps, retiring outdated skills, or planning the next round of skill improvements
+description: Use when auditing the current skill system — evaluating quality, identifying overlaps or gaps, or planning improvements. Invoke after adding 5+ new skills, after a major workflow change, or when a skill seems to fire in the wrong context.
 ---
 
 # Skill Stocktake

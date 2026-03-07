@@ -1,6 +1,6 @@
 ---
 name: prompt-efficiency
-description: Use when writing prompts, agent task descriptions, or skill instructions — to eliminate wasted tokens and get the right output in fewer rounds
+description: Use when writing prompts, agent task descriptions, or skill instructions. Invoke whenever a prompt is getting long, repetitive, or unclear — before sending to a subagent or external model.
 ---
 
 # Prompt Efficiency

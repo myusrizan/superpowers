@@ -1,6 +1,6 @@
 ---
 name: brainstorming
-description: "Use when starting any new feature, component, behavior change, or modification — before writing any code. Required gate before implementation."
+description: "Use when starting any new feature, component, behavior change, or modification — before writing any code. Required gate before ANY implementation — even if the user just says 'implement X', pause to brainstorm first."
 ---
 
 # Brainstorming Ideas Into Designs

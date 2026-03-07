@@ -1,6 +1,6 @@
 ---
 name: search-first
-description: Use when about to implement new functionality, add a dependency, or create a utility — before writing any code, to search for existing solutions that may already solve the problem
+description: Use when about to implement new functionality, add a dependency, or create a utility — before writing any code. Invoke before implementing ANY new functionality, even trivial utilities. Check if a library already does this before writing a single line.
 ---
 
 # Search First

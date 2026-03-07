@@ -1,6 +1,6 @@
 ---
 name: explaining
-description: Use when the user asks to explain something, says "help me understand", "what is X", "break this down", "explain like I'm a [level]", or is clearly confused about a concept or system
+description: Use when the user asks to explain something, seems confused, or asks a "why" or "how does X work" question. Invoke whenever someone says "help me understand", "what is X", "break this down", or shows signs of not following a concept.
 ---
 
 # Explaining

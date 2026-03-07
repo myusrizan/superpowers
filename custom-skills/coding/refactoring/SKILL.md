@@ -1,6 +1,6 @@
 ---
 name: refactoring
-description: Use when improving the structure, clarity, or design of existing code without changing its observable behavior — before making structural changes to working code
+description: Use when improving the structure, clarity, or design of existing code without changing its observable behavior. Invoke whenever someone says "clean this up", "this is messy", "reorganize this", or "simplify this code".
 ---
 
 # Refactoring

@@ -1,6 +1,6 @@
 ---
 name: e2e-testing
-description: Use when writing, organizing, or debugging end-to-end tests — browser automation, Page Object Model structure, flaky test management, or CI/CD integration for E2E suites
+description: Use when writing, organizing, or debugging end-to-end tests — including Playwright, Cypress, or Selenium work. Invoke when E2E tests are flaky, slow, or missing, or when browser automation is needed.
 ---
 
 # End-to-End Testing

@@ -1,6 +1,6 @@
 ---
 name: ci-cd-pipeline
-description: Use when designing, debugging, or reviewing CI/CD pipelines — pipeline structure, caching strategy, secrets management, deployment strategies, or troubleshooting failed pipeline runs
+description: Use when designing, debugging, or reviewing CI/CD pipelines. Invoke when a pipeline is slow or failing, or whenever someone mentions GitHub Actions, CircleCI, Jenkins, Docker builds, or deployment automation.
 ---
 
 # CI/CD Pipeline

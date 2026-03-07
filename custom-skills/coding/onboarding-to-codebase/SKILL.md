@@ -1,6 +1,6 @@
 ---
 name: onboarding-to-codebase
-description: Use when starting work on an unfamiliar codebase, repository, or service — to build a working mental model before making any changes
+description: Use when starting work on an unfamiliar codebase, repository, or service — to build a working mental model before making any changes. Invoke at the start of any session in a new or unfamiliar codebase, even if the user jumps straight to "implement X".
 ---
 
 # Onboarding to Codebase

@@ -1,6 +1,6 @@
 ---
 name: requesting-code-review
-description: Use when completing tasks, implementing major features, or before merging to verify work meets requirements
+description: Use when completing tasks, implementing major features, or before merging to verify work meets requirements. Invoke before any merge, push to main, or when confident work is done — even without an explicit review request.
 ---
 
 # Requesting Code Review
