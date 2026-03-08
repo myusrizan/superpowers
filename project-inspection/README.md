@@ -11,7 +11,7 @@ This folder contains a structured inspection of the Superpowers project to help 
 | [how-to-install.md](how-to-install.md) | Step-by-step installation for Claude Code, Cursor, Codex, OpenCode |
 | [advantages.md](advantages.md) | 12 concrete advantages, each grounded in specific skills and files |
 | [flaws-and-caveats.md](flaws-and-caveats.md) | Current caveats, structural limitations, and resolved historical flaws |
-| [skill-catalog.md](skill-catalog.md) | All 53 skills: what they do and when they trigger |
+| [skill-catalog.md](skill-catalog.md) | All 39 skills: what they do and when they trigger |
 
 ## Quick Decision Guide
 
@@ -22,12 +22,12 @@ This folder contains a structured inspection of the Superpowers project to help 
 - You want Claude to automatically apply the right process for each task
 
 **Think twice if:**
-- Your use is primarily non-coding (the system is 49% coding skills)
+- Your use is primarily non-coding — use `--no-code` profile (13 skills: meta + qol + thinking) or install selectively
 - You're on Windows and don't have bash available (extra setup required — see `prerequisites.md`)
 - You don't want Claude's behavior structured by predefined workflows
 
 ## Inspection Date
 
-2026-03-08 — based on the repository at commit `2150412` (branch: `development`).
+2026-03-08 — post-merge consolidation (53 → 39 skills via 9 merges). Branch: `development`.
 
 All information in this folder references files inside this repository.

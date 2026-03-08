@@ -56,9 +56,9 @@ This copies `custom-skills/` → `skills/` and regenerates the catalog in `custo
 
 Start a new Claude Code session and ask for something that matches a skill, e.g.:
 
-- "Help me plan this feature" → should trigger `brainstorming` and then `writing-plans`
-- "Let's debug this issue" → should trigger `systematic-debugging`
-- "Review this code" → should trigger `requesting-code-review`
+- "Help me plan this feature" → should trigger `feature-workflow` (brainstorm phase)
+- "Let's debug this issue" → should trigger `diagnosing`
+- "Review this code" → should trigger `code-review`
 
 If skills don't fire, check:
 
@@ -87,6 +87,20 @@ It outputs JSON with `additional_context` that Claude Code injects into the sess
 
 ---
 
+## Build Profiles (Local Fork Only)
+
+When installing from a local fork, you can choose a skill subset:
+
+```bash
+bash scripts/build-skills.sh           # all 39 skills (default)
+bash scripts/build-skills.sh --code    # 31 skills: coding + agents + git
+bash scripts/build-skills.sh --no-code # 13 skills: meta + qol + thinking
+```
+
+`--code` always includes `meta/using-superpowers` so Claude can still route skills. Use `--no-code` if you primarily use Claude for writing, research, and thinking — not software development.
+
+---
+
 ## Keeping Skills Up to Date
 
 If you installed via the marketplace, update with:
@@ -102,4 +116,4 @@ git pull
 bash scripts/build-skills.sh
 ```
 
-The build script warns you if the skill count reaches 60 (cognitive overload threshold). If you see this warning after an update, review `investigation-report/05-missing-skills-and-gaps.md` for guidance.
+The build script warns you if the skill count reaches 60 (cognitive overload threshold). The system currently sits at 39 skills with 21 slots of headroom.

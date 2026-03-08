@@ -4,7 +4,7 @@
 
 ## What Is Superpowers?
 
-**Superpowers** is a Claude Code plugin that installs a library of 53 composable "skills" — reusable instruction modules that guide Claude through structured, systematic workflows.
+**Superpowers** is a Claude Code plugin that installs a library of 39 composable "skills" — reusable instruction modules that guide Claude through structured, systematic workflows.
 
 Instead of relying on Claude's ad-hoc reasoning, Superpowers enforces proven processes:
 
@@ -29,11 +29,11 @@ Skills trigger **automatically** — when you describe a task, Claude detects wh
 
 | Category | Skills | Focus |
 |----------|--------|-------|
-| `coding/` | 26 | TDD, debugging, planning, review, security, performance, APIs, migrations |
-| `meta/` | 10 | Skill management, session memory, prompt efficiency, CLAUDE.md auditing |
+| `coding/` | 17 | TDD, debugging, planning, review, security, performance, APIs, migrations, E2E & eval testing |
 | `agents/` | 5 | Parallel agents, autonomous loops, MCP server building, subagent dispatch |
 | `qol/` | 5 | Drafting, documenting, researching, explaining, summarizing |
 | `git/` | 4 | Worktrees, branch finishing, GitHub CLI, git history archaeology |
+| `meta/` | 6 | Skill management, session memory, prompting, CLAUDE.md auditing |
 | `thinking/` | 3 | Decision making, reasoning, thinking partner |
 
 ## License

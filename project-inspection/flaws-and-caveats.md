@@ -14,9 +14,9 @@
 
 ### 1. Cognitive Load Threshold at 60 Skills
 
-The build script (`scripts/build-skills.sh`) emits a warning when the skill count reaches 60. The system is currently at 53 skills. At 60, the catalog becomes too large for reliable automatic skill selection — Claude may begin selecting the wrong skill or no skill for a given task.
+The build script (`scripts/build-skills.sh`) emits a warning when the skill count reaches 60. The system is currently at **39 skills** — 21 slots of headroom. At 60, the catalog becomes too large for reliable automatic skill selection — Claude may begin selecting the wrong skill or no skill for a given task.
 
-**What this means for you:** If you add custom skills frequently, monitor the count. The system will need redesign (splitting into sub-catalogs or tiered activation) before reaching 60.
+**What this means for you:** If you add custom skills frequently, monitor the count. The system will need redesign (splitting into sub-catalogs or tiered activation) before reaching 60. The `--code` / `--no-code` build profiles can also reduce the active catalog if needed.
 
 **Source:** `scripts/build-skills.sh` (warning block near end of script)
 
@@ -24,29 +24,21 @@ The build script (`scripts/build-skills.sh`) emits a warning when the skill coun
 
 ### 2. Skills Are Coding-Centric
 
-26 of 53 skills (49%) are in the `coding/` category. The `qol/` skills (drafting, researching, explaining) exist but are not as deeply developed. If your primary use case is non-coding work, the system provides less structured value.
+17 of 39 skills (44%) are in the `coding/` category. The `qol/` skills (drafting, researching, explaining) exist but are not as deeply developed. If your primary use case is non-coding work, the system provides less structured value. The `--no-code` build profile (meta + qol + thinking, 13 skills) can be used to install only the non-coding subset.
 
 **Source:** `investigation-report/05-missing-skills-and-gaps.md`
 
 ---
 
-### 3. Skill Count Inconsistency
-
-The `README.md` lists 52 skills. The actual count in `custom-skills/` is 53 (the `meta/proactive-memory` skill was added after the README was last updated). This is a documentation drift issue — not functional — but signals that the README may lag behind actual content.
-
-**Source:** Memory — verified during repo inspection (2026-03-08)
-
----
-
-### 4. Session-Start Hook Scope
+### 3. Session-Start Hook Scope
 
 The hook (`hooks/session-start`) fires on `startup | resume | clear | compact` events. It injects the `using-superpowers` skill and recent session logs.
 
-However, if the most recent log exceeds 150 lines, it is skipped (not injected). Long sessions can lose continuity if not captured with `meta/capturing-context` before context compaction.
+However, if the most recent log exceeds 150 lines, it is skipped (not injected). Long sessions can lose continuity if not captured before context compaction.
 
-**Mitigation:** Use `meta/capturing-context` proactively at natural breakpoints. The `meta/proactive-memory` skill provides a supplementary mid-session observation log.
+**Mitigation:** Use the `session-memory` skill (Mode B: Save) proactively at natural breakpoints. Mode A (Proactive Observation) writes small tagged entries to `logs/observations.md` throughout the session as a lightweight safety net.
 
-**Source:** `hooks/session-start` (line limit logic), `custom-skills/meta/capturing-context/SKILL.md`
+**Source:** `hooks/session-start` (line limit logic), `custom-skills/meta/session-memory/SKILL.md`
 
 ---
 
@@ -80,7 +72,7 @@ If you previously used Superpowers and have `~/.config/superpowers/skills` on yo
 
 ### 8. No Automated Testing of Skills
 
-Skills are prose-based instruction files (Markdown). There is a `meta/writing-skills` skill that applies TDD concepts to skill creation, but skill files themselves are not automatically tested for correctness on each build. A skill could contain conflicting instructions or stale references and only be discovered through use.
+Skills are prose-based instruction files (Markdown). The `skill-management` skill applies TDD concepts to skill creation (RED → GREEN → REFACTOR with subagent pressure tests), but skill files are not automatically tested for correctness on each build. A skill could contain conflicting instructions or stale references and only be discovered through use.
 
 The audit history in `investigation-report/` represents human-driven quality control, not automated CI.
 
@@ -94,7 +86,7 @@ Skills trigger based on Claude's interpretation of frontmatter descriptions and 
 
 This is a fundamental limitation of instruction-based skill routing vs. code-based dispatch.
 
-**Mitigation:** The `using-superpowers` skill instructs Claude to check the catalog before acting. You can also explicitly invoke a skill: `/skill superpowers:brainstorming`.
+**Mitigation:** The `using-superpowers` skill instructs Claude to check the catalog before acting. You can also explicitly invoke a skill: `/skill superpowers:feature-workflow`.
 
 **Source:** `custom-skills/meta/using-superpowers/SKILL.md`
 

@@ -10,9 +10,9 @@ Without Superpowers, Claude improvises. With it, Claude follows structured, repe
 
 **Examples from the skill files:**
 
-- `coding/systematic-debugging` — 4-phase root cause analysis: reproduce → pattern analysis → hypothesis testing → fix with test. Never jumps straight to "try this fix".
+- `coding/diagnosing` — 4-phase root cause analysis (debug mode): reproduce → pattern analysis → hypothesis testing → fix with test. Never jumps straight to "try this fix".
 - `coding/test-driven-development` — Enforces RED-GREEN-REFACTOR per task. Claude writes a failing test first, watches it fail, then writes the minimum code to pass.
-- `coding/brainstorming` — Acts as a mandatory gate before implementation. Claude explores alternatives via Socratic design refinement before writing a single line of code.
+- `coding/feature-workflow` — Acts as a mandatory design gate before implementation (brainstorm phase). Claude explores alternatives via Socratic refinement before writing a single line of code.
 
 ---
 
@@ -52,21 +52,19 @@ The orchestrator uses ~15% of the context budget; subagents each get 100%. This 
 
 ## 6. Built-In Security Review
 
-`coding/security-review` provides a 3-phase OWASP-aligned security review covering 10 threat categories: injection, auth, XSS, IDOR, config, data exposure, dependencies, logging, rate limiting, and business logic flaws.
+`coding/security` provides two complementary reviews in one skill: a vulnerability review covering OWASP 10 threat categories (injection, auth, XSS, IDOR, config, data exposure, dependencies, logging, rate limiting, business logic), and a silent failure review catching empty catch blocks, swallowed exceptions, and unjustified fallbacks — both before every merge.
 
 `meta/sensitive-data-guard` intercepts credentials or PII in shared content with mandatory revocation warnings before any analysis proceeds.
 
-**Source:** `custom-skills/coding/security-review/SKILL.md`, `custom-skills/meta/sensitive-data-guard/SKILL.md`
+**Source:** `custom-skills/coding/security/SKILL.md`, `custom-skills/meta/sensitive-data-guard/SKILL.md`
 
 ---
 
 ## 7. Session Continuity Across Context Compaction
 
-`meta/capturing-context` saves session state to `logs/` before context is lost. `meta/session-resume` loads the most recent log on session start. The hook auto-injects recent logs (≤150 lines).
+`meta/session-memory` covers the full session lifecycle in one skill: Mode A writes small tagged observations to `logs/observations.md` throughout the session (append-only, `rg`-searchable by `#hashtag`); Mode B saves a full context log on request; Mode C loads the most recent log at session start and confirms before resuming. The hook auto-injects recent logs (≤150 lines).
 
-`meta/proactive-memory` maintains an append-only observation log at `logs/observations.md` with hashtag retrieval via `rg` — no infrastructure required.
-
-**Source:** `custom-skills/meta/capturing-context/SKILL.md`, `custom-skills/meta/session-resume/SKILL.md`, `custom-skills/meta/proactive-memory/SKILL.md`
+**Source:** `custom-skills/meta/session-memory/SKILL.md`
 
 ---
 
@@ -96,11 +94,11 @@ Each pattern includes a termination condition checklist and circuit breaker patt
 
 ## 10. Extensible — Build Your Own Skills
 
-`meta/skill-creator` guides you through the full skill creation process: intent → draft → test → evaluate → iterate → optimize. `meta/writing-skills` applies TDD to skill creation (RED/GREEN/REFACTOR).
+`meta/skill-management` covers both phases of the skill lifecycle: creation (intent → draft → TDD pressure test with subagent → evaluate → iterate → optimize description) and stocktake (audit all skills for actionability, scope fit, uniqueness, currency). Both phases follow the same TDD philosophy — watch a subagent fail without the skill before writing it.
 
-`scripts/build-skills.sh` rebuilds the catalog automatically from `custom-skills/` frontmatter. Add a new skill folder with a `SKILL.md` and it appears in the catalog on the next build.
+`scripts/build-skills.sh` rebuilds the catalog automatically from `custom-skills/` frontmatter. Add a new skill folder with a `SKILL.md` and it appears in the catalog on the next build. Three build profiles: `--code`, `--no-code`, or all.
 
-**Source:** `custom-skills/meta/skill-creator/SKILL.md`, `scripts/build-skills.sh`
+**Source:** `custom-skills/meta/skill-management/SKILL.md`, `scripts/build-skills.sh`
 
 ---
 
@@ -114,6 +112,6 @@ Works on macOS, Linux, Windows (via `hooks/run-hook.cmd` polyglot wrapper), Curs
 
 ## 12. Mature Audit History — Known-Good State
 
-The `investigation-report/` folder contains 7 audit reports covering all 53 skills. All 23 historical flaws are resolved. The system is in a known-good state with no open issues as of 2026-03-08.
+The `investigation-report/` folder contains 7 audit reports. All 23 historical flaws are resolved. Skills have since been consolidated from 53 → 39 through 9 merges, reducing cognitive load while preserving all content. The system is in a known-good state with no open issues as of 2026-03-08.
 
 **Source:** `investigation-report/03-critical-flaws.md`, `investigation-report/07-post-expansion-audit.md`

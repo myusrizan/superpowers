@@ -85,17 +85,17 @@ Start a new session in your chosen platform and ask for something that should tr
 
 ## The Basic Workflow
 
-1. **brainstorming** - Activates before writing code. Refines rough ideas through questions, explores alternatives, presents design in sections for validation. Saves design document.
+1. **feature-workflow** (brainstorm phase) - Activates before writing code. Refines rough ideas through questions, explores alternatives, presents design in sections for validation. Saves design document.
 
 2. **using-git-worktrees** - Activates after design approval. Creates isolated workspace on new branch, runs project setup, verifies clean test baseline.
 
-3. **writing-plans** - Activates with approved design. Breaks work into bite-sized tasks (2-5 minutes each). Every task has exact file paths, complete code, verification steps.
+3. **feature-workflow** (plan phase) - Activates with approved design. Breaks work into bite-sized tasks (2-5 minutes each). Every task has exact file paths, complete code, verification steps.
 
-4. **subagent-driven-development** or **executing-plans** - Activates with plan. Dispatches fresh subagent per task with two-stage review (spec compliance, then code quality), or executes in batches with human checkpoints.
+4. **subagent-driven-development** or **feature-workflow** (execute phase) - Activates with plan. Dispatches fresh subagent per task with two-stage review (spec compliance, then code quality), or executes in batches with human checkpoints.
 
 5. **test-driven-development** - Activates during implementation. Enforces RED-GREEN-REFACTOR: write failing test, watch it fail, write minimal code, watch it pass, commit. Deletes code written before tests.
 
-6. **requesting-code-review** - Activates between tasks. Reviews against plan, reports issues by severity. Critical issues block progress.
+6. **code-review** - Activates between tasks. Dispatches reviewer subagent, reports issues by severity. Critical issues block progress.
 
 7. **finishing-a-development-branch** - Activates when tasks complete. Verifies tests, presents options (merge/PR/keep/discard), cleans up worktree.
 
@@ -103,58 +103,50 @@ Start a new session in your chosen platform and ask for something that should tr
 
 ## What's Inside
 
-52 skills across 6 categories. The skill catalog is auto-generated from frontmatter on every build — run `bash scripts/build-skills.sh` after adding or editing skills.
+39 skills across 6 categories. The skill catalog is auto-generated from frontmatter on every build — run `bash scripts/build-skills.sh` after adding or editing skills.
 
-### coding/ — Software development workflow
+### coding/ — Software development workflow (17 skills)
 
 | Skill | What it does |
 |-------|-------------|
+| **advanced-testing** | E2E tests (Playwright/Cypress): Page Object Model, flaky test quarantine, condition-based waits; and AI eval harness: capability vs regression evals, pass@k metrics, graders |
 | **api-design** | REST API design: URL structure, HTTP semantics, pagination (offset vs cursor), versioning strategy |
-| **brainstorming** | Required gate before implementation — Socratic design refinement, explores alternatives, saves design doc |
-| **ci-cd-pipeline** | Pipeline design and debugging: stage ordering, caching, secrets management, deployment strategies (rolling/blue-green/canary) |
-| **code-reviewer** | Subagent structured code review: spec compliance first, then code quality |
+| **ci-cd-pipeline** | Pipeline design and debugging: stage ordering, caching, secrets management, deployment strategies |
+| **code-review** | Three roles: request review (dispatch reviewer subagent), perform review (spec compliance → code quality, confidence ≥80), receive review (verify before implementing, technical pushback) |
+| **codebase-analysis** | Two modes: onboarding (6-layer reading order, written mental model before any changes) and investigating (read everything first, produce structured findings report) |
 | **database-migrations** | Schema changes: expand-contract pattern, CONCURRENTLY indexes, batch updates, UPSERT, SKIP LOCKED queues |
 | **dependency-management** | Add vs build decisions, pinning strategy, lock file discipline, vulnerability audits |
-| **e2e-testing** | Page Object Model, flaky test quarantine, condition-based waits, CI artifact collection |
-| **eval-harness** | Eval-driven development: capability vs regression evals, pass@k metrics, code/model/human graders |
-| **executing-plans** | Implements written plans in batches with human review checkpoints |
-| **investigating** | Systematic codebase/system investigation — produces structured findings report |
+| **diagnosing** | Two modes: systematic debugging (4-phase root cause: reproduce → pattern → hypothesis → fix with test) and performance profiling (measure → profile → one fix → measure again) |
+| **feature-workflow** | Three phases: brainstorm (design gate before any code), plan (bite-sized tasks with exact code/commands), execute (batch with checkpoints) |
 | **observability** | Structured logging, metrics (counter/gauge/histogram), distributed tracing, SLO-based alerting |
-| **onboarding-to-codebase** | 6-layer reading order for unfamiliar codebases — produces written mental model before any changes |
-| **performance-profiling** | Measure → profile → hypothesis → one fix → measure again. Never optimize without profiling. |
 | **planning-sessions** | Prioritizes a backlog of candidate features — dependency ordering, value/effort ratio, milestones |
-| **receiving-code-review** | Structured process for responding to review feedback with technical rigor |
 | **refactoring** | Characterization tests first, one refactoring type at a time, tests after every change, undo on red |
-| **requesting-code-review** | Dispatches code-reviewer subagent with full context |
-| **search-first** | Research before building — find existing libraries/MCPs/skills before writing a line of code |
-| **security-review** | 3-phase OWASP-aligned review: attack surface map → 10 threat categories → CRITICAL/HIGH/MEDIUM/LOW output |
-| **silent-failure-hunter** | Hunts empty catch blocks, swallowed exceptions, non-actionable error messages, unjustified fallbacks |
-| **systematic-debugging** | 4-phase root cause process: reproduce → pattern analysis → hypothesis testing → fix with test first |
+| **search-first** | Research before building — find existing libraries/MCPs/skills via `rg` and Context7 before writing a line of code |
+| **security** | Two parts: vulnerability review (OWASP 10 threat categories, attack surface mapping) and silent failure review (empty catch blocks, swallowed exceptions, unjustified fallbacks, critical path zero-tolerance) |
 | **test-driven-development** | RED-GREEN-REFACTOR: write failing test, watch fail, write minimal code, watch pass, refactor |
-| **ui-ux-design** | Industry-matched UI/UX: analyze context, select style system, apply accessibility/interaction standards, validate against anti-patterns |
+| **ui-ux-design** | Industry-matched UI/UX: analyze context, select style system, apply accessibility/interaction standards |
 | **verification-before-completion** | Evidence before claims — run the command, read the output, then report status |
-| **writing-plans** | Detailed implementation plans with exact code, exact commands, expected outputs |
 
-### agents/ — Agent orchestration
+### agents/ — Agent orchestration (5 skills)
 
 | Skill | What it does |
 |-------|-------------|
-| **autonomous-loops** | 5 patterns for Claude running without user input: sequential pipeline, de-sloppify pass, infinite loop, continuous PR loop, RFC-driven DAG |
-| **dispatching-parallel-agents** | Parallel subagent dispatch for independent tasks |
+| **autonomous-loops** | 5 patterns for Claude running without user input: sequential pipeline, de-sloppify pass, infinite loop, continuous PR loop, RFC-driven DAG; includes circuit breaker and termination conditions |
+| **dispatching-parallel-agents** | Parallel subagent dispatch for independent tasks with wave-based dependency ordering |
 | **iterative-retrieval** | Subagent context-gathering: broad dispatch → score (0–1) → refine → max 3 cycles |
 | **mcp-server** | Build custom MCP servers with FastMCP — tool design, input validation, registration with Claude Code/Desktop/Cursor |
-| **subagent-driven-development** | Per-task subagent dispatch with 2-stage review (spec compliance + code quality) |
+| **subagent-driven-development** | Per-task subagent dispatch with 2-stage review (spec compliance + code quality); ~15% orchestrator / 100% subagent context budget |
 
-### git/ — Version control
+### git/ — Version control (4 skills)
 
 | Skill | What it does |
 |-------|-------------|
 | **finishing-a-development-branch** | Verify tests → 4 options (merge/PR/keep/discard) → cleanup worktree |
-| **github-cli** | Issues, CI runs, releases, search, and repo operations via gh — JSON output, scripting, autonomous PR loops |
+| **github-cli** | Issues, CI runs, releases, search, and repo operations via `gh` — JSON output, scripting, autonomous PR loops |
 | **history-archaeology** | Trace bug origins via git blame, bisect, log -S pickaxe, and show — read history before forming hypotheses |
 | **using-git-worktrees** | Isolated worktrees with smart directory selection and safety verification |
 
-### thinking/ — Intellectual engagement
+### thinking/ — Intellectual engagement (3 skills)
 
 | Skill | What it does |
 |-------|-------------|
@@ -162,7 +154,7 @@ Start a new session in your chosen platform and ask for something that should tr
 | **reasoning** | First principles, pre-mortem, assumption mapping, inversion, devil's advocate |
 | **thinking-partner** | 4 modes: Opinion / Ideation / Challenge / Sounding Board |
 
-### qol/ — Output production
+### qol/ — Output production (5 skills)
 
 | Skill | What it does |
 |-------|-------------|
@@ -172,20 +164,16 @@ Start a new session in your chosen platform and ask for something that should tr
 | **researching** | Multi-source synthesis — direct answer first, evidence, caveats, confidence |
 | **summarizing** | Bullet / narrative / executive / tldr — format matched to content and need |
 
-### meta/ — Skill system
+### meta/ — Skill system (6 skills)
 
 | Skill | What it does |
 |-------|-------------|
-| **capturing-context** | Saves session state to `logs/` for next session; also covers context compaction timing |
 | **claude-md-improver** | 5-phase CLAUDE.md audit: discover → assess (6 criteria A–F) → report → propose → apply |
-| **prompt-efficiency** | 8 patterns for token-efficient prompts — goal first, output constraints, batching, structure over prose |
-| **prompt-generator** | Generates reusable system prompts saved to `prompts/` |
+| **prompting** | Two modes: efficiency (8 patterns for lean prompts — goal first, constrain output, batch requests) and generation (produce reusable system prompts saved to `prompts/`) |
 | **sensitive-data-guard** | Detects credentials/PII in shared content — mandatory revocation warning before any resolution |
-| **session-resume** | Loads most recent context log, reconstructs state, confirms before resuming |
-| **skill-creator** | Full skill creation process: intent → draft → test → evaluate → iterate → optimize description |
-| **skill-stocktake** | Systematic skill audit: actionability, scope fit, uniqueness, currency → Keep/Improve/Update/Retire/Merge |
+| **session-memory** | Three modes: observe mid-session (append-only tagged observations to `logs/observations.md`), save at end (full context log on request), restore at start (loads last log and confirms before resuming) |
+| **skill-management** | Two phases: create/write (design → draft → TDD test → iterate → optimize description) and stocktake (audit all skills for actionability, scope fit, uniqueness, currency) |
 | **using-superpowers** | Mandatory session-start skill — discovers available skills before taking any action |
-| **writing-skills** | TDD for skill creation: RED (test without skill) → GREEN (write skill) → REFACTOR |
 
 ## Philosophy
 
@@ -219,7 +207,19 @@ description: Use when [specific triggering condition]. Invoke whenever [adjacent
 
 The `description` field is the primary trigger mechanism. Make it specific but include adjacent phrasings — Claude undertriggers by default.
 
-See `custom-skills/meta/writing-skills/SKILL.md` for the complete skill creation guide, or use the `skill-creator` skill to build and test new skills iteratively.
+See `custom-skills/meta/skill-management/SKILL.md` for the complete skill creation guide, or use the `skill-management` skill to build and test new skills iteratively.
+
+### Build profiles
+
+The build script supports three install profiles:
+
+```bash
+bash scripts/build-skills.sh           # all 39 skills (default)
+bash scripts/build-skills.sh --code    # 31 skills: coding + agents + git only
+bash scripts/build-skills.sh --no-code # 13 skills: meta + qol + thinking only
+```
+
+`--code` always includes `meta/using-superpowers` so Claude can still route skills regardless of profile.
 
 ## Updating
 
