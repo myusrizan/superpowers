@@ -3,7 +3,12 @@
 # Rebuilds the skills/ folder from custom-skills/.
 # Called automatically by hooks/session-start on every session.
 # Run manually to rebuild without starting a session:
-#   ./scripts/build-skills.sh
+#   ./scripts/build-skills.sh [--code | --no-code]
+#
+# Modes:
+#   (no flag)  — all categories (default)
+#   --code     — coding, agents, git only (+ using-superpowers bootstrap)
+#   --no-code  — meta, qol, thinking only
 
 set -euo pipefail
 
@@ -12,6 +17,28 @@ PLUGIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
 SRC="${PLUGIN_ROOT}/custom-skills"
 DEST="${PLUGIN_ROOT}/skills"
+
+# Parse install mode
+MODE="${1:-}"
+case "$MODE" in
+    --code)
+        CATEGORIES="coding agents git"
+        echo "build-skills: Building code-only profile (coding, agents, git + using-superpowers bootstrap)." >&2
+        ;;
+    --no-code)
+        CATEGORIES="meta qol thinking"
+        echo "build-skills: Building no-code profile (meta, qol, thinking)." >&2
+        ;;
+    "")
+        CATEGORIES="coding agents git meta qol thinking"
+        echo "build-skills: Building full profile (all categories)." >&2
+        ;;
+    *)
+        echo "build-skills: ERROR — unknown mode '${MODE}'. Valid options: --code, --no-code, or omit for all." >&2
+        exit 1
+        ;;
+esac
+export BUILD_CATEGORIES="$CATEGORIES"
 
 # Validate source exists
 if [ ! -d "$SRC" ]; then
@@ -22,11 +49,12 @@ fi
 # Auto-generate skill catalog in using-superpowers/SKILL.md from frontmatter
 catalog_source="${SRC}/meta/using-superpowers/SKILL.md"
 if [ -f "$catalog_source" ] && command -v python3 >/dev/null 2>&1; then
-    SRC="$SRC" CATALOG="$catalog_source" python3 << 'PYEOF'
+    SRC="$SRC" CATALOG="$catalog_source" BUILD_CATEGORIES="$BUILD_CATEGORIES" python3 << 'PYEOF'
 import os, re, sys
 
 src = os.environ['SRC']
 catalog_file = os.environ['CATALOG']
+allowed = set(os.environ.get('BUILD_CATEGORIES', '').split())
 
 CATEGORY_META = [
     ('coding',   'Software development workflow'),
@@ -36,6 +64,13 @@ CATEGORY_META = [
     ('qol',      'Output production'),
     ('meta',     'Skill system'),
 ]
+
+# Filter to only the categories in this build profile
+# Always include meta for using-superpowers (catalog bootstrap), even in --code mode
+if allowed:
+    filtered = [(c, d) for c, d in CATEGORY_META if c in allowed or c == 'meta']
+else:
+    filtered = CATEGORY_META
 
 def parse_frontmatter(path):
     try:
@@ -59,7 +94,7 @@ def shorten_desc(desc):
     return desc[0].upper() + desc[1:] if desc else desc
 
 catalog_lines = []
-for cat, cat_desc in CATEGORY_META:
+for cat, cat_desc in filtered:
     cat_dir = os.path.join(src, cat)
     if not os.path.isdir(cat_dir):
         continue
@@ -117,9 +152,22 @@ else:
 PYEOF
 fi
 
-# Rebuild destination
+# Rebuild destination — copy only the categories in this build profile
 rm -rf "$DEST"
-cp -r "$SRC" "$DEST"
+mkdir -p "$DEST"
+
+for cat in $CATEGORIES; do
+    if [ -d "${SRC}/${cat}" ]; then
+        cp -r "${SRC}/${cat}" "${DEST}/${cat}"
+    fi
+done
+
+# Always copy meta/using-superpowers (bootstrap skill for catalog routing)
+# even in --code mode, so Claude knows which skills are available
+if [[ "$MODE" == "--code" ]] && [ -d "${SRC}/meta/using-superpowers" ]; then
+    mkdir -p "${DEST}/meta"
+    cp -r "${SRC}/meta/using-superpowers" "${DEST}/meta/using-superpowers"
+fi
 
 # Ensure logs/ directory exists for capturing-context skill
 mkdir -p "${PLUGIN_ROOT}/logs"
