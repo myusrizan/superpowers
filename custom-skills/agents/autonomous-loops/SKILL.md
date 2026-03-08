@@ -224,6 +224,56 @@ fi
 
 ---
 
+## Termination Conditions
+
+**Every loop MUST define when to stop before it starts.** Without explicit termination conditions, automated pipelines can run indefinitely, exhaust API credits, or corrupt state via repeated failed writes.
+
+### Termination checklist — define BEFORE starting any loop
+
+**Success condition (primary exit):**
+- [ ] What state means "done"? (PR merged, all items processed, N iterations complete)
+- [ ] How does the loop detect it? (file exists, command exit code, API response field)
+
+**Failure / escalation condition (force stop):**
+- [ ] Max iteration limit set? (default: 10 for open-ended loops)
+- [ ] Max elapsed time defined? (default: 30 minutes for automated pipelines)
+- [ ] Stuck-state detection? (same error repeating across 2+ consecutive iterations → stop and escalate)
+
+**User escalation triggers — surface instead of continuing:**
+- Iteration limit reached with task still incomplete
+- Same blocker in 2+ consecutive iteration logs
+- Error requiring external action (permissions, credentials, merge conflict requiring judgment)
+- Tests keep failing after 3+ fix attempts
+
+### In code
+
+```bash
+MAX_ITERATIONS=10
+ITERATION=0
+
+while true; do
+  ITERATION=$((ITERATION + 1))
+
+  # Termination: hard ceiling
+  if (( ITERATION > MAX_ITERATIONS )); then
+    echo "MAX_ITERATIONS ($MAX_ITERATIONS) reached. Task incomplete. Review pipeline state."
+    exit 1
+  fi
+
+  # ... do work, write results to state file ...
+
+  # Termination: success condition
+  if [ "$TASK_COMPLETE" = "true" ]; then
+    echo "Done at iteration $ITERATION."
+    break
+  fi
+done
+```
+
+**Rule:** `while true` with no max-iteration guard is a bug. Always set a ceiling.
+
+---
+
 ## Hard Rules
 
 - **One concern per agent.** Don't ask one agent to implement and clean up and test. Separate agents.
@@ -231,3 +281,4 @@ fi
 - **Shared task notes for context.** Any loop longer than 1 iteration needs a state file.
 - **Rate-limit concurrent agents.** Unbounded concurrent launches exhaust API rate limits.
 - **Capture error context.** Failed iterations must write diagnostics before the next iteration runs.
+- **Set termination conditions first.** Max iterations, max time, and escalation triggers defined before the loop starts.

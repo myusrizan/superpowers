@@ -2,6 +2,7 @@
 
 > Scope: All 51 skills across 7 categories
 > Trigger: Session expansion added 3 new skills (git/history-archaeology, git/github-cli, agents/mcp-server) + GSD investigation prompted review
+> Updated: Session 4 (2026-03-07) — FLAW-17 resolved, autonomous-loops GREEN, eval-harness GREEN, database-migrations GREEN
 
 ---
 
@@ -26,13 +27,14 @@ Skills not listed here are unchanged from the 2026-03-07 audit and remain GREEN.
 | `meta/session-resume` | GREEN (fixed) | FLAW-22: stale hook tag reference removed |
 | `agents/mcp-server` | GREEN (fixed) | FLAW-23: Context7 reference added for FastMCP docs |
 | `coding/systematic-debugging` | GREEN (not re-read) | Pressure-tested GREEN in prior audit; no change since |
-| `agents/autonomous-loops` | YELLOW | Pressure-tested this session — see note below |
-| `coding/eval-harness` | YELLOW | Not pressure-tested; acquired from external repo |
-| `coding/database-migrations` | YELLOW | Not pressure-tested; low-use, deferred per prior audit |
+| `agents/autonomous-loops` | GREEN (fixed) | Session 4: termination condition checklist added — YELLOW gap closed |
+| `coding/eval-harness` | GREEN (pressure-tested) | Session 4: actionability HIGH, scope fit HIGH, currency HIGH. Minor: run.py runner not defined (acceptable for pattern-level reference) |
+| `coding/database-migrations` | GREEN (pressure-tested) | Session 4: comprehensive coverage, multi-tool, actionable. PostgreSQL-focused and clearly marked. No gaps |
+| `meta/writing-skills` | GREEN (fixed) | Session 4: FLAW-17 resolved — split into lean SKILL.md (~140 lines) + detail.md (~300 lines, on-demand) |
 
-### autonomous-loops: YELLOW note
+### autonomous-loops: GREEN (Session 4 fix)
 
-The skill is well-structured with a clear loop pattern. However, it lacks an explicit **termination condition checklist** — when to break the loop, when to surface to the user, and how many iterations are acceptable before forcing a stop. This is a correctness gap (infinite loops in automated pipelines are a real risk), not a style issue. Recommend adding a termination section.
+Termination condition checklist added. The skill now includes: success condition definition, failure/escalation conditions (max iteration ceiling, stuck-state detection), user escalation triggers, and a reference bash snippet enforcing `MAX_ITERATIONS`. The `while true` without guard rule is now an explicit Hard Rule.
 
 ### All other 47 skills
 
@@ -85,12 +87,12 @@ No retirements or mergers recommended.
 
 | # | Flaw | Severity | Status |
 |---|------|----------|--------|
-| FLAW-17 | `writing-skills` verbosity — long session-load skill | Low | Open — intentionally deferred |
+| FLAW-17 | `writing-skills` verbosity — long session-load skill | Low | **Resolved** (Session 4) |
 | FLAW-21 | `skill-stocktake` save location (`findings/` → `investigation-report/`) | Low | **Resolved** |
 | FLAW-22 | `session-resume` stale hook tag reference | Low | **Resolved** |
 | FLAW-23 | `mcp-server` missing Context7 reference for FastMCP | Low | **Resolved** |
 
-Only FLAW-17 remains open. All others resolved.
+All flaws resolved. No open flaws.
 
 ---
 
@@ -158,9 +160,13 @@ Skills that run on Claude capabilities alone (no install needed):
 
 ## Recommended Next Actions
 
-| # | Action | Effort | Impact |
-|---|--------|--------|--------|
-| 1 | Add termination condition checklist to `autonomous-loops` (YELLOW → GREEN) | 20 min | Prevents infinite loop risk in automated pipelines |
-| 2 | Pressure-test `eval-harness` | 30 min | Validates acquired skill quality |
-| 3 | Resolve FLAW-17 (`writing-skills` verbosity) | 30 min | Reduces session-start context load |
-| 4 | Pressure-test `database-migrations` | 30 min | Validates acquired skill quality |
+All session 4 actions completed. No open items.
+
+| # | Action | Status |
+|---|--------|--------|
+| 1 | Add termination condition checklist to `autonomous-loops` | **Done** (Session 4) |
+| 2 | Pressure-test `eval-harness` | **Done** — GREEN |
+| 3 | Resolve FLAW-17 (`writing-skills` verbosity) | **Done** (Session 4) |
+| 4 | Pressure-test `database-migrations` | **Done** — GREEN |
+
+System is clean. Next audit trigger: when 5+ new skills are added (catalog hits 56) or a skill misbehaves in production use.
