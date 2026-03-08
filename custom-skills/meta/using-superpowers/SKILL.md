@@ -134,16 +134,11 @@ Skills are organized into categories. Invoke by name using the `Skill` tool (e.g
 **meta/** — Skill system
 | Skill | Use when |
 |-------|----------|
-| `capturing-context` | The user explicitly says "extract the context" or "extract context" — captures everything from the current session that the next conversation needs to continue without losing state |
 | `claude-md-improver` | Auditing, improving, or updating CLAUDE.md files — to keep project memory aligned with the actual codebase. Invoke when a CLAUDE.md might be stale, incomplete, or generic, or when the user asks to "audit the CLAUDE.md" or "check if CLAUDE.md is up to date". |
-| `proactive-memory` | Use proactively during a session to write searchable observations to a shared log — at natural pause points (after research, after completing a feature, after hitting a blocker, when switching topics). Also use when the user asks to search past observations. Complements capturing-context (which is end-of-session) and session-resume (which loads the last full log). |
-| `prompt-efficiency` | Writing prompts, agent task descriptions, or skill instructions. Invoke whenever a prompt is getting long, repetitive, or unclear — before sending to a subagent or external model. |
-| `prompt-generator` | Asked to generate a prompt, system prompt, briefing document, or reusable instruction set — produces a structured, efficient prompt saved to a markdown file |
+| `prompting` | Writing prompts, agent task descriptions, or skill instructions and they are getting long, repetitive, or unclear (efficiency mode), or when asked to generate a reusable prompt, system prompt, briefing document, or instruction set from scratch (generation mode). Invoke before sending any prompt to a subagent or external model, or when the user says "generate a prompt", "create a system prompt", or wants to export a workflow as reusable instructions. |
 | `sensitive-data-guard` | Shared content may contain sensitive data — API keys, passwords, tokens, private keys, credentials, PII, or connection strings — before proceeding with any task involving that content |
-| `session-resume` | Starting a session and wanting to restore state from a previous session — loads the most recent context log, reconstructs working state, and confirms with the user before resuming |
-| `skill-creator` | Creating a new skill, improving an existing skill, or optimizing a skill's description for better triggering. Invoke when a user wants to capture a workflow as a skill, test whether a skill works, or iterate on skill quality. |
-| `skill-stocktake` | Auditing the current skill system — evaluating quality, identifying overlaps or gaps, or planning improvements. Invoke after adding 5+ new skills, after a major workflow change, or when a skill seems to fire in the wrong context. |
-| `writing-skills` | Creating new skills, editing existing skills, or verifying skills work before deployment |
+| `session-memory` | Use proactively during a session to write searchable observations at natural pause points (after research, decisions, blockers, or topic switches), or when the user says "extract context" / "save progress" / "checkpoint" to save full session state, or when starting a session and wanting to restore state from a previous session. |
+| `skill-management` | Creating a new skill, improving or testing an existing skill, or optimizing a skill's description for better triggering (creation phase), or when auditing the current skill system to evaluate quality, find overlaps, or plan improvements (stocktake phase). Invoke after adding 5+ new skills, after a major workflow change, or when a skill seems to fire in the wrong context. |
 <!-- CATALOG_END -->
 
 ## Skill Priority
