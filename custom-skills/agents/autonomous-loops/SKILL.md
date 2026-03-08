@@ -222,28 +222,121 @@ fi
 
 **Rule:** Blind retries amplify errors. Diagnosis before retry.
 
+### Stagnation Detection
+
+A loop can fail silently — Claude appears to work but nothing actually changes. Detect this proactively:
+
+**Signals of stagnation (check between iterations):**
+- No file modifications since the previous iteration (`git diff --stat` returns nothing)
+- Identical or near-identical error message repeated across 2+ consecutive iterations
+- Claude output declining in length/substance (summaries replacing actions)
+
+**Response to stagnation:**
+1. Do NOT continue — a stagnating loop compounds the problem
+2. Log the detected stagnation signal to the state file
+3. Transition to HALF_OPEN (reduce scope, try a simpler subtask) or escalate to the user
+
+```bash
+# Check for file changes as a progress signal
+FILES_CHANGED=$(git diff --stat HEAD 2>/dev/null | wc -l)
+if (( FILES_CHANGED == 0 && ITERATION > 1 )); then
+  echo "STAGNATION: No file changes detected at iteration $ITERATION. Halting." >> .pipeline-state
+  exit 1
+fi
+```
+
+---
+
+## Circuit Breaker Pattern
+
+For long-running loops, implement a circuit breaker to prevent runaway failures and enable recovery without manual intervention.
+
+**Three states:**
+
+| State | Meaning | Behavior |
+|-------|---------|----------|
+| CLOSED | Normal operation | Loop runs; progress detected |
+| HALF_OPEN | Cautious recovery | Loop runs with reduced scope; testing if progress resumes |
+| OPEN | Failure mode | Loop halts; wait for cooldown or manual reset |
+
+**Transition triggers:**
+- CLOSED → HALF_OPEN: N consecutive iterations with no progress (default: 2–3)
+- HALF_OPEN → CLOSED: Progress detected again
+- HALF_OPEN → OPEN: Progress still absent after probe iteration
+- OPEN → HALF_OPEN: Cooldown timer elapsed (e.g., 30 min) or manual reset
+
+**Why this matters over a simple retry:** A plain retry loop can amplify errors (repeated bad writes, repeated API calls hitting the same wall). The circuit breaker introduces a recovery pause and probes with reduced scope before resuming full operation.
+
+```bash
+CB_STATE="CLOSED"
+NO_PROGRESS_COUNT=0
+CB_NO_PROGRESS_THRESHOLD=3
+
+after_each_iteration() {
+  if (( FILES_CHANGED == 0 )); then
+    NO_PROGRESS_COUNT=$((NO_PROGRESS_COUNT + 1))
+  else
+    NO_PROGRESS_COUNT=0
+    CB_STATE="CLOSED"
+  fi
+
+  if (( NO_PROGRESS_COUNT >= CB_NO_PROGRESS_THRESHOLD )); then
+    if [ "$CB_STATE" = "CLOSED" ]; then
+      CB_STATE="HALF_OPEN"
+    elif [ "$CB_STATE" = "HALF_OPEN" ]; then
+      CB_STATE="OPEN"
+      echo "Circuit OPEN. Halting loop." >> .pipeline-state
+      exit 1
+    fi
+  fi
+}
+```
+
 ---
 
 ## Termination Conditions
 
 **Every loop MUST define when to stop before it starts.** Without explicit termination conditions, automated pipelines can run indefinitely, exhaust API credits, or corrupt state via repeated failed writes.
 
+### Dual-condition exit verification
+
+A common failure mode: Claude outputs language like "done", "complete", or "finished" during productive work — triggering false-positive termination. Require **both** conditions to be true before stopping:
+
+1. **Heuristic signal** — output contains a completion phrase, a sentinel file exists, exit code is 0
+2. **Explicit confirmation** — Claude is asked directly "Is the task fully complete? Reply YES or NO only" and answers YES
+
+```bash
+# After Claude runs, check heuristic first
+if echo "$OUTPUT" | grep -qi "task complete"; then
+  # Then verify explicitly before trusting it
+  CONFIRM=$(claude -p "The previous step reported completion. Is the task truly done? Reply YES or NO only.")
+  if [ "$CONFIRM" = "YES" ]; then
+    break
+  fi
+fi
+```
+
+**Why both:** Heuristics catch the common case cheaply. Explicit confirmation catches false positives from mid-task progress narration.
+
 ### Termination checklist — define BEFORE starting any loop
 
 **Success condition (primary exit):**
 - [ ] What state means "done"? (PR merged, all items processed, N iterations complete)
 - [ ] How does the loop detect it? (file exists, command exit code, API response field)
+- [ ] Is dual-condition verification needed? (yes for any loop running unattended)
 
 **Failure / escalation condition (force stop):**
 - [ ] Max iteration limit set? (default: 10 for open-ended loops)
 - [ ] Max elapsed time defined? (default: 30 minutes for automated pipelines)
 - [ ] Stuck-state detection? (same error repeating across 2+ consecutive iterations → stop and escalate)
+- [ ] Circuit breaker configured? (for loops expected to run >5 iterations unattended)
 
 **User escalation triggers — surface instead of continuing:**
 - Iteration limit reached with task still incomplete
 - Same blocker in 2+ consecutive iteration logs
 - Error requiring external action (permissions, credentials, merge conflict requiring judgment)
 - Tests keep failing after 3+ fix attempts
+- Circuit breaker reached OPEN state
 
 ### In code
 
@@ -262,15 +355,45 @@ while true; do
 
   # ... do work, write results to state file ...
 
-  # Termination: success condition
-  if [ "$TASK_COMPLETE" = "true" ]; then
-    echo "Done at iteration $ITERATION."
-    break
+  # Termination: success condition (dual-condition)
+  if echo "$OUTPUT" | grep -qi "complete\|done\|finished"; then
+    CONFIRM=$(claude -p "Is the task truly done? Reply YES or NO only.")
+    if [ "$CONFIRM" = "YES" ]; then
+      echo "Done at iteration $ITERATION."
+      break
+    fi
   fi
 done
 ```
 
 **Rule:** `while true` with no max-iteration guard is a bug. Always set a ceiling.
+
+---
+
+## Context Injection per Iteration
+
+Each Claude invocation in a loop starts with a blank slate. Inject current loop state explicitly into every prompt so Claude can make informed decisions:
+
+```bash
+claude -p "
+Loop context:
+- Iteration: $ITERATION of $MAX_ITERATIONS
+- Tasks remaining: $(wc -l < TASK_QUEUE.md)
+- Last iteration result: $(tail -5 .pipeline-state)
+- Circuit breaker state: $CB_STATE
+
+Task: Continue working on the next item in TASK_QUEUE.md.
+On completion, remove the item from TASK_QUEUE.md and append a summary to .pipeline-state.
+"
+```
+
+**What to inject:**
+- Current iteration number and ceiling
+- Remaining work (task count, queue file)
+- Summary of the previous iteration's outcome
+- Any active failure state (circuit breaker, blockers)
+
+**What NOT to inject:** Full history of all iterations — this bloats the prompt and dilutes focus. Summarize instead.
 
 ---
 
@@ -282,3 +405,6 @@ done
 - **Rate-limit concurrent agents.** Unbounded concurrent launches exhaust API rate limits.
 - **Capture error context.** Failed iterations must write diagnostics before the next iteration runs.
 - **Set termination conditions first.** Max iterations, max time, and escalation triggers defined before the loop starts.
+- **Detect stagnation, not just errors.** A loop producing no file changes is failing even if it returns exit 0.
+- **Use dual-condition exit for unattended loops.** Heuristic signals alone produce false-positive termination.
+- **Circuit breaker for long loops.** Any loop expected to run >5 iterations unattended needs CLOSED/HALF_OPEN/OPEN state management.

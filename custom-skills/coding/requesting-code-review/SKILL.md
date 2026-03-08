@@ -46,6 +46,8 @@ Read the template at `requesting-code-review/code-reviewer.md`, fill in the plac
 - Note Minor issues for later
 - Push back if reviewer is wrong (with reasoning)
 
+> **For large PRs or high-stakes merges:** dispatch 2 independent `code-reviewer` subagents in parallel with identical inputs. A finding reported by both carries higher confidence than one reported by only one. Discard findings that appear in only one review without a clear rationale.
+
 ## Example
 
 ```

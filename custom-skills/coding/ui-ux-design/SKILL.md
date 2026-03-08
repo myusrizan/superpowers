@@ -7,9 +7,55 @@ description: Use when designing or implementing any user interface — websites,
 
 ## Overview
 
-Produce professional, industry-appropriate UI/UX by following a 4-step process: analyze the project context, match it to a design system, apply non-negotiable standards, then validate against anti-patterns.
+Produce professional, distinctive UI/UX by following a 5-step process: establish design intent (concept + tonal direction + what makes it memorable), analyze project context, match to a design system, apply non-negotiable standards, then validate against anti-patterns.
 
 **Source:** Adapted from `nextlevelbuilder/ui-ux-pro-max-skill` (MIT) — 38k stars, 100 industry rules, 99 UX guidelines, 68 style definitions.
+
+---
+
+## Step 0: Establish Design Intent
+
+Before matching industry patterns or writing any code, define what makes this interface **memorable and distinctive**. Generic-correct is worse than bold-and-specific.
+
+Ask and answer these three questions:
+
+1. **What is the core concept?** One sentence. Not "a dashboard for analytics" — something like "a command center that makes the user feel like they have superhuman visibility."
+2. **What is the tonal direction?** Pick one: minimal-precise / bold-playful / dark-technical / warm-human / editorial-magazine / brutalist-raw / luxurious-restrained. This choice drives every subsequent decision.
+3. **What makes this memorable?** One specific detail that elevates it above competent: an unusual typeface pairing, a signature animation, an unexpected color choice, a layout that breaks the grid deliberately.
+
+### Typography — choose intentionally
+
+Generic fonts (Arial, Inter, Roboto as defaults) produce generic results. If you reach for Inter as a first instinct, stop and justify it or choose differently.
+
+| Intent | Alternatives worth considering |
+|--------|-------------------------------|
+| Modern technical | Geist, JetBrains Mono (for accents), IBM Plex |
+| Editorial / magazine | Playfair Display + DM Sans, Fraunces + Figtree |
+| Luxury / premium | Cormorant Garamond + Montserrat |
+| Playful / bold | Cabinet Grotesk, Clash Display, Space Grotesk |
+| Minimal / Swiss | Neue Haas Grotesk, GT Walsheim, Aktiv Grotesk |
+
+Pairing rule: one display face (headings, hero) + one workhorse face (body, UI). Never three font families.
+
+### Complexity matches vision
+
+The implementation depth must match the aesthetic ambition:
+- **Maximalist direction** (bold, rich, editorial) → elaborate animations, layered visual details, expressive spacing. Half-measures look broken.
+- **Refined/minimal direction** → precision in spacing (4px grid strictly), tight typographic rhythm, subtle micro-interactions. Sloppiness is immediately visible.
+- **Neutral/functional direction** → clean component patterns, zero decorative elements, accessibility-first. Any ornament becomes noise.
+
+### Anti-generic-AI patterns
+
+These patterns signal "AI built this" and undermine credibility — avoid by default:
+
+- Purple/violet gradients as the primary accent (`#6366F1`, `#8B5CF6`) — overused, especially in SaaS
+- Glassmorphism applied uniformly to everything regardless of context
+- Hero sections with: large centered heading + subtitle + two CTA buttons + abstract blob graphic
+- Cards with identical padding, identical border-radius, identical shadow — no hierarchy
+- Icon + heading + 3-line description repeated 6 times in a grid ("features section")
+- Color palettes of 5+ colors with no clear dominant/accent structure
+
+**The test:** Would this look identical if a different AI generated it for a different product? If yes, it needs a distinct direction.
 
 ---
 
@@ -259,6 +305,9 @@ Page files only contain rules that **differ** from MASTER.
 
 Before delivering any UI code, verify. **If time constraints make a full pass impossible, do NOT deliver silently — explicitly flag each unchecked item as a known defect. Silent delivery without checklist completion is not permitted.**
 
+- [ ] Design intent defined (concept, tonal direction, memorable detail) before coding
+- [ ] Typography is a deliberate choice — not Arial/Inter/Roboto by default
+- [ ] No anti-generic-AI patterns (purple gradient accent, uniform glassmorphism, clone hero section, features icon-grid)
 - [ ] No emojis used as icons
 - [ ] All buttons have `cursor-pointer`
 - [ ] All interactive elements have hover + active states

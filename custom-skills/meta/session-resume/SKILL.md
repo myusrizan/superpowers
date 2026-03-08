@@ -110,11 +110,13 @@ If the log doesn't match the current state of the codebase (files that should ex
 
 ## Integration
 
-**Pairs with:** `capturing-context` — this skill loads what that skill saves
+**Pairs with:** `capturing-context` — this skill loads what that skill saves. `proactive-memory` — check recent observations for the project before or alongside reading the full log.
 
 **Session continuity loop:**
 ```
-Session ends → capturing-context → logs/YYYY-MM-DD-HH-MM.md
-Next session starts → session-resume reads most recent log from logs/
+Session starts → session-resume reads most recent log from logs/
+              → also checks: rg "project: <name>" logs/observations.md | tail -20
 session-resume → restores state and confirms → work continues
+Session runs  → proactive-memory writes observations at pause points
+Session ends  → capturing-context → logs/YYYY-MM-DD-HH-MM.md
 ```

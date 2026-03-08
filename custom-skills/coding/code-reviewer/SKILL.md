@@ -11,7 +11,51 @@ Perform rigorous, two-phase code review: first verify the implementation matches
 
 **Core principle:** Spec compliance before code quality. A beautifully written implementation that does the wrong thing is a failure.
 
+**Signal quality over volume.** False positives erode trust faster than missed issues. Only report findings you would stake your credibility on. A short list of real problems is better than a long list of maybes.
+
 **This skill is invoked by subagent dispatch from `requesting-code-review`.** When you are dispatched as a code-reviewer, follow this skill exactly.
+
+---
+
+## What to Report vs. What to Skip
+
+### Report only — high-signal findings
+
+**Spec compliance (Phase 1):**
+- Requirements that are missing entirely
+- Behavior that is definitively wrong relative to the spec
+
+**Code quality (Phase 2):**
+- Code that won't compile (syntax errors, type errors, missing imports)
+- Logic that produces definitively wrong results
+- Security vulnerabilities with a clear exploit path
+- Error handling that silently swallows exceptions on critical paths
+
+### Never report — low-signal noise
+
+- Style preferences and formatting (use a linter, not a reviewer)
+- Subjective improvements ("could be cleaner", "I'd have done it differently")
+- Potential issues that require external context you don't have ("this might be a problem if…")
+- Things that could be optimized but aren't causing real problems
+- Missing tests for behavior that is already working and tested elsewhere
+- Suggestions for features not in the spec (YAGNI)
+
+**The signal test:** If you can't point to a specific line and say "this will fail / this is wrong / this violates the spec at section X" — don't report it.
+
+---
+
+## Confidence Scoring
+
+Assign every finding a confidence score before reporting it:
+
+| Score | Meaning | Action |
+|-------|---------|--------|
+| 90–100 | Certain — provably wrong or missing | Report |
+| 80–89 | High confidence — very likely an issue | Report |
+| 60–79 | Medium — possible issue, needs more context | Validate or drop |
+| < 60 | Low — speculation | Drop silently |
+
+**Only report findings with confidence ≥ 80.** For findings scoring 60–79, do a validation pass (re-read the code, check if there's context that resolves it) before deciding to include or drop.
 
 ---
 
@@ -70,12 +114,28 @@ Strengths:
 - [what's done well]
 
 Issues:
-- Critical: [description] at [location]
-- Important: [description] at [location]
-- Minor: [description] at [location]
+- Critical [conf: 95]: [description] at [location]
+- Important [conf: 82]: [description] at [location]
+- Minor [conf: 80]: [description] at [location]
 
 Assessment: [Ready to proceed / Needs fixes before proceeding]
 ```
+
+Include confidence score inline with each finding. Only list findings ≥ 80.
+
+---
+
+## Validation Pass — Before Reporting Anything
+
+After collecting candidate findings from both phases, validate each one before including it in the output:
+
+For every candidate finding, ask:
+1. **Can I quote the specific line(s)?** If not, the finding is too vague to report.
+2. **Is this definitely wrong, or just different from how I'd do it?** If the latter, drop it.
+3. **Does reading the surrounding context change my assessment?** Re-read 10–20 lines around the issue before finalising.
+4. **What is my confidence score?** If < 80, drop it.
+
+This validation pass is not optional. It is what separates a useful review from a noisy one.
 
 ---
 

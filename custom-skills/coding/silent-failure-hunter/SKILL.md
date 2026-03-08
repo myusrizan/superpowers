@@ -110,6 +110,7 @@ For every `try/catch`, `try/except`, `.catch()`, `.on('error')`, or error callba
 - [ ] **Is fallback behavior justified?** If returning a default value, is it explicitly safe and documented?
 - [ ] **Is the catch scope appropriate?** Catching `Exception` / `Error` (base class) requires explicit justification.
 - [ ] **Does the caller know the difference between "not found" and "error"?** `null` returns from catch blocks must be documented or replaced with typed errors.
+- [ ] **Is this a critical path?** If so, zero tolerance — no catch-and-continue without exceptional justification (see below).
 
 ---
 
@@ -195,10 +196,70 @@ async function getFeatureFlags(): Promise<FeatureFlags> {
 
 ---
 
+## Approved Overrides — Intentional Suppression
+
+Not every catch-and-continue pattern is wrong. Some are deliberate design decisions. The problem is distinguishing *intentional* suppression from *lazy* suppression.
+
+Mark intentional suppressions with an `[APPROVED_OVERRIDE]` comment. An override is only valid when **ALL** of these are true:
+
+1. The error is **expected and frequent** (e.g., JSON parse on optional fields, port scan connection failures)
+2. Logging would create **too much noise** (high-frequency, expected-failure path)
+3. There is **explicit recovery logic** (fallback value, retry, graceful degradation)
+4. The justification is **specific and technical** — not vague
+
+```typescript
+// [APPROVED_OVERRIDE] JSON parse on optional user preferences field.
+// Fails frequently on first-time users with no stored prefs.
+// Logging would flood metrics; fallback to DEFAULT_PREFS is safe and documented.
+try {
+  return JSON.parse(rawPrefs);
+} catch {
+  return DEFAULT_PREFS;
+}
+```
+
+### Good override justifications ✅
+- "Expected JSON parse failures for optional data fields, too frequent to log"
+- "Logger can't log its own failures, using stderr as last resort"
+- "Health check port scan — expected connection failures on free port detection"
+- "Git repo detection — expected failures when not in a git directory"
+
+### Bad override justifications ❌ — always reject these
+- "Error is not important" — why catch it then?
+- "Happens sometimes" — when? why? under what conditions?
+- "Works fine without logging" — works until it doesn't
+- "Optional" — optional errors still need visibility
+
+When you see an empty or silent catch block without `[APPROVED_OVERRIDE]`, treat it as a CRITICAL finding regardless of how "unimportant" it seems.
+
+---
+
+## Critical Paths — Zero Tolerance
+
+Some files or modules are too important to permit any error suppression. Apply stricter rules to these:
+
+- Errors on critical paths **MUST** be visible (logged) or fatal (thrown)
+- Catch-and-continue on critical paths is **banned** without exceptional justification and explicit approval
+- If uncertain: make it throw — fail loud, not silent
+
+**What qualifies as a critical path:**
+- Core agent / orchestrator logic
+- Authentication and authorization handlers
+- Payment or financial transaction processing
+- Session store and state management
+- Data migration scripts
+- Any code where silent failure corrupts persistent state
+
+When reviewing a critical path file, flag EVERY suppressed exception as CRITICAL regardless of severity heuristics. A suppressed error in auth is never MEDIUM.
+
+---
+
 ## Hard Rules
 
-- **Empty catch blocks are forbidden.** There is no legitimate reason for a catch block with no body. If you truly want to ignore an error, document why explicitly.
+- **Empty catch blocks are forbidden.** There is no legitimate reason for a catch block with no body. If you truly want to ignore an error, document why explicitly with `[APPROVED_OVERRIDE]`.
 - **Log the exception, not just a message.** `logger.error("Failed")` loses the error type and stack. Always pass the exception object.
 - **Distinguish "not found" from "error"** in return types. Typed errors or Result types are better than ambiguous `null` returns.
 - **Fallbacks must be documented.** A comment explaining why the default is safe is mandatory when returning defaults from catch blocks.
 - **Broad catches (`Exception`, `Error`) require justification.** If you catch everything, you must explain what you're guarding against.
+- **Critical paths have zero tolerance.** No catch-and-continue on agent core, auth, payments, or state management without exceptional justification.
+- **Challenge every override.** `[APPROVED_OVERRIDE]` is not a get-out-of-jail card — verify all four criteria are met before accepting it.
