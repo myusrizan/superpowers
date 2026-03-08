@@ -1,7 +1,7 @@
 # Custom Skills System — Investigation Report
 
-> Last updated: 2026-03-07 (Session 4)
-> Scope: All 51 skills in `custom-skills/` across 7 categories
+> Last updated: 2026-03-08 (Session 5)
+> Scope: All 52 skills in `custom-skills/` across 6 categories
 
 ---
 
@@ -27,6 +27,7 @@
 | 2026-03-07 (today) | Current audit + optimization pass | 48 skills | FLAW-18 through FLAW-20 resolved; OPT-A through OPT-E applied |
 | 2026-03-07 (session 3) | Post-expansion audit + GSD investigation | 51 skills | FLAW-21–23 resolved; writing-plans plan-verification added; required tools compiled |
 | 2026-03-07 (session 4) | Critical flaws + optimization pass | 51 skills | FLAW-17 resolved; autonomous-loops GREEN; eval-harness GREEN; database-migrations GREEN |
+| 2026-03-08 (session 5) | README.md sync | 52 skills | README.md updated to match actual skill count; 4 missing skills added to catalog tables (ui-ux-design, mcp-server, github-cli, history-archaeology); category count corrected 7→6 |
 
 ---
 
@@ -40,10 +41,9 @@ All 23 flaws from all audits are fully resolved. The 12 optimizations from the o
 
 ### What Changed Since Last Audit
 
-- **18 new skills** acquired from external repos (2026-03-07)
-- **30 skill descriptions** updated with "pushy" trigger phrases
-- **1 new skill** created today: `coding/ui-ux-design` (fills zero-coverage UI/UX gap)
-- Total: **48 skills** across 7 categories
+- **README.md catalog sync** — 4 skills present in `custom-skills/` but missing from the README tables were added: `coding/ui-ux-design`, `agents/mcp-server`, `git/github-cli`, `git/history-archaeology`
+- **Category count corrected** — README.md now shows 6 categories (was incorrectly listed as 7; there are 6 actual directories under `custom-skills/`)
+- Total: **52 skills** across 6 categories
 
 ### Current Open Issues
 
@@ -70,4 +70,4 @@ None. All 23 flaws across all audits are resolved. See `03-critical-flaws.md` an
 
 ### Remaining Actions
 
-None. System is clean. Next audit trigger: 5+ new skills added (catalog hits 56), or a skill misbehaves in production use.
+None. System is clean. Next audit trigger: 5+ new skills added (catalog hits 57), or a skill misbehaves in production use.

@@ -103,7 +103,7 @@ Start a new session in your chosen platform and ask for something that should tr
 
 ## What's Inside
 
-47 skills across 6 categories. The skill catalog is auto-generated from frontmatter on every build — run `bash scripts/build-skills.sh` after adding or editing skills.
+52 skills across 6 categories. The skill catalog is auto-generated from frontmatter on every build — run `bash scripts/build-skills.sh` after adding or editing skills.
 
 ### coding/ — Software development workflow
 
@@ -131,6 +131,7 @@ Start a new session in your chosen platform and ask for something that should tr
 | **silent-failure-hunter** | Hunts empty catch blocks, swallowed exceptions, non-actionable error messages, unjustified fallbacks |
 | **systematic-debugging** | 4-phase root cause process: reproduce → pattern analysis → hypothesis testing → fix with test first |
 | **test-driven-development** | RED-GREEN-REFACTOR: write failing test, watch fail, write minimal code, watch pass, refactor |
+| **ui-ux-design** | Industry-matched UI/UX: analyze context, select style system, apply accessibility/interaction standards, validate against anti-patterns |
 | **verification-before-completion** | Evidence before claims — run the command, read the output, then report status |
 | **writing-plans** | Detailed implementation plans with exact code, exact commands, expected outputs |
 
@@ -141,6 +142,7 @@ Start a new session in your chosen platform and ask for something that should tr
 | **autonomous-loops** | 5 patterns for Claude running without user input: sequential pipeline, de-sloppify pass, infinite loop, continuous PR loop, RFC-driven DAG |
 | **dispatching-parallel-agents** | Parallel subagent dispatch for independent tasks |
 | **iterative-retrieval** | Subagent context-gathering: broad dispatch → score (0–1) → refine → max 3 cycles |
+| **mcp-server** | Build custom MCP servers with FastMCP — tool design, input validation, registration with Claude Code/Desktop/Cursor |
 | **subagent-driven-development** | Per-task subagent dispatch with 2-stage review (spec compliance + code quality) |
 
 ### git/ — Version control
@@ -148,6 +150,8 @@ Start a new session in your chosen platform and ask for something that should tr
 | Skill | What it does |
 |-------|-------------|
 | **finishing-a-development-branch** | Verify tests → 4 options (merge/PR/keep/discard) → cleanup worktree |
+| **github-cli** | Issues, CI runs, releases, search, and repo operations via gh — JSON output, scripting, autonomous PR loops |
+| **history-archaeology** | Trace bug origins via git blame, bisect, log -S pickaxe, and show — read history before forming hypotheses |
 | **using-git-worktrees** | Isolated worktrees with smart directory selection and safety verification |
 
 ### thinking/ — Intellectual engagement
