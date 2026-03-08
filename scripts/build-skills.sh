@@ -171,3 +171,19 @@ fi
 
 # Ensure logs/ directory exists for capturing-context skill
 mkdir -p "${PLUGIN_ROOT}/logs"
+
+# Package skills as .zip files in dist/ for upload compatibility.
+# Upload dialog accepts: .zip/.skill file containing SKILL.md, or standalone .md with YAML frontmatter.
+# Skills with multiple files need .zip; packaging all skills as .zip handles both cases uniformly.
+DIST="${PLUGIN_ROOT}/dist"
+rm -rf "$DIST"
+mkdir -p "$DIST"
+
+while IFS= read -r skill_md; do
+    skill_dir="$(dirname "$skill_md")"
+    skill_name="$(basename "$skill_dir")"
+    (cd "$skill_dir" && zip -qr "${DIST}/${skill_name}.zip" .)
+done < <(find "$DEST" -name "SKILL.md")
+
+skill_zip_count=$(find "$DIST" -name "*.zip" | wc -l | tr -d ' ')
+echo "build-skills: Packaged ${skill_zip_count} skills as .zip files in dist/." >&2
