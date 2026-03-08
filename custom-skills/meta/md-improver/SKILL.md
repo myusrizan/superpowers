@@ -1,5 +1,5 @@
 ---
-name: claude-md-improver
+name: md-improver
 description: Use when auditing, improving, or updating CLAUDE.md files — to keep project memory aligned with the actual codebase. Invoke when a CLAUDE.md might be stale, incomplete, or generic, or when the user asks to "audit the CLAUDE.md" or "check if CLAUDE.md is up to date".
 ---
 
