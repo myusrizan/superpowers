@@ -1,6 +1,6 @@
 ---
 name: frontend-design
-description: Use when designing UI components, building frontend interfaces, or applying design patterns to web UIs. Invoke when implementing visual components, designing layouts, choosing UI patterns, or applying design systems to frontend code.
+description: Use when designing or implementing web UI — components, layouts, design systems, or visual standards. Invoke when building visual components, establishing design tokens (colors, typography, spacing), choosing UI patterns, or asked about accessibility, responsiveness, or web design guidelines.
 ---
 
 # Frontend Design
@@ -105,6 +105,92 @@ Mobile-first. Add breakpoints only when content requires it — not at standard 
   .card { padding: var(--space-6); }
 }
 ```
+
+---
+
+## Design System Standards
+
+### Visual Hierarchy
+
+Users scan, not read. Every page or screen needs exactly one primary action.
+
+**Hierarchy tools:** Size (larger = more important) · Weight (bold = emphasis) · Color (high contrast = primary, muted = secondary) · Position (top-left to bottom-right scan path) · Whitespace (separation signals grouping)
+
+**Rule:** If everything is important, nothing is. One primary CTA per screen — demote the rest.
+
+### Typography Scale
+
+```css
+/* Modular scale (1.25 ratio), 4px base */
+--text-xs:   0.64rem;   /* ~10px — captions, labels */
+--text-sm:   0.8rem;    /* ~13px — secondary text */
+--text-base: 1rem;      /* 16px — body (NEVER below 16px for body) */
+--text-lg:   1.25rem;   /* 20px — subheadings */
+--text-xl:   1.563rem;  /* 25px — headings */
+--text-2xl:  1.953rem;  /* 31px — page titles */
+
+/* Line height */
+/* body text: 1.5–1.6  |  headings: 1.2–1.3 */
+
+/* Measure (line length): 60–75 chars optimal, 80 max */
+```
+
+**Rule:** Body text minimum 16px. Never three font families — one display face + one workhorse face.
+
+### Color System Tokens
+
+```css
+--color-primary:        [brand color — primary actions, links]
+--color-primary-hover:  [darker — interaction state]
+--color-secondary:      [supporting — secondary actions]
+--color-surface:        [backgrounds — cards, panels]
+--color-surface-raised: [elevated — modals, dropdowns]
+--color-border:         [dividers — subtle separators]
+--color-text:           [main text — body copy]
+--color-text-muted:     [secondary — labels, captions]
+--color-error:          [red — errors, destructive]
+--color-success:        [green — confirmations]
+--color-warning:        [amber — cautions]
+```
+
+**Contrast minimums (WCAG AA):** Normal text (<18px): 4.5:1 · Large text (≥18px or ≥14px bold): 3:1 · UI components: 3:1
+
+### Z-Axis (Layering)
+
+```css
+--z-base:     0;
+--z-raised:   10;   /* cards, panels */
+--z-dropdown: 100;  /* dropdowns, tooltips */
+--z-sticky:   200;  /* sticky headers */
+--z-modal:    300;  /* modals, dialogs */
+--z-toast:    400;  /* notifications */
+```
+
+Never use arbitrary `z-index: 9999`.
+
+### Interaction Timing
+
+| Interaction | Standard |
+|-------------|----------|
+| **Hover** | Color shift within 100ms |
+| **Focus** | 2px solid outline, 2px offset, visible on all backgrounds |
+| **Active/press** | Scale or color feedback within 50ms |
+| **Loading** | Skeleton or spinner within 300ms of triggering action |
+| **Transition** | 150–300ms; ease-in-out for most; ease-out for entrances |
+| **Error** | Inline, next to the field — never only at top of form |
+
+### Responsive Breakpoints
+
+```css
+/* Mobile first — base styles target mobile */
+/* xs: 0–479px  — base */
+@media (min-width: 480px) { }  /* sm — larger phones */
+@media (min-width: 768px) { }  /* md — tablets */
+@media (min-width: 1024px) { } /* lg — laptops */
+@media (min-width: 1280px) { } /* xl — desktops */
+```
+
+**Rule:** Adjust at content breakpoints, not device breakpoints. Always test at 375px (small mobile), 768px (tablet), 1280px (desktop).
 
 ---
 

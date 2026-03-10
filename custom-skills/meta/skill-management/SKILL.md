@@ -33,11 +33,19 @@ Before writing, understand how Claude decides to invoke a skill:
 
 If the current conversation already contains a workflow to capture, extract the steps from history first.
 
+**Check if a skill already exists first:**
+```bash
+rg "name:" custom-skills/ -l
+rg "description:" custom-skills/ -A 1 | grep -i "<keyword>"
+```
+If a close match exists, enhance it instead of creating a new one.
+
 Answer before drafting:
 1. What should this skill enable Claude to do?
 2. When should it trigger? What would a user actually say?
 3. What's the expected output format?
 4. Are outputs objectively verifiable (code generated, file created) or subjective (writing quality)? — Verifiable → write test cases. Subjective → qualitative review.
+5. What adjacent skills already exist? Where does this skill end and another begin?
 
 **Interview:** Ask about edge cases, input constraints, success criteria, failure modes. Don't write until the interview is complete.
 
@@ -151,6 +159,20 @@ See `skill-management/testing-skills-with-subagents.md` and `skill-management/de
 
 ---
 
+### Step 4b: Pre-save Validation (before committing the skill)
+
+Run these 4 tests before placing the skill:
+
+**Trigger test:** Read only the `description` field in isolation. Would Claude activate this skill in the right situation? Would it miss adjacent cases?
+
+**Coverage test:** Walk through 3 realistic user prompts. Does the skill body handle all 3?
+
+**Scope test:** Is there any step that belongs in a different existing skill? If yes, reference that skill instead.
+
+**Completeness test:** Could someone follow this skill with zero prior context and produce the correct output?
+
+---
+
 ### Step 5: Iterate
 
 | Problem | Fix |
@@ -198,6 +220,8 @@ bash scripts/build-skills.sh
 
 ### Hard Rules (Creation)
 
+- **Check before creating.** Search `custom-skills/` for an existing skill to enhance before writing a new one.
+- **One trigger per skill.** If the skill needs two unrelated "When to use" conditions, split it into two skills.
 - **Write the description last.** Draft the body first, understand what the skill does, then write the trigger.
 - **Test before declaring done.** A skill that hasn't been tested with real prompts is a guess.
 - **Explain the why.** Claude follows reasoning better than mandates.

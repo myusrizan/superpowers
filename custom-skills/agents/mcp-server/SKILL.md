@@ -26,6 +26,24 @@ An MCP (Model Context Protocol) server exposes tools that Claude can call — ju
 
 ---
 
+## Pre-Implementation: Design Each Tool
+
+Before writing code, define every tool in a table:
+
+```markdown
+Tool: <name>
+Description: <one sentence — what it does and when Claude should call it>
+Input schema:
+  - param1 (string, required): what it is
+  - param2 (integer, optional, default: 10): what it is
+Returns: <what success looks like>
+Errors: <what failure looks like and why>
+```
+
+**Naming:** `verb_noun` format — `get_user`, `search_files`, `create_post`. Never vague names like `process` or `handle`.
+
+---
+
 ## The FastMCP Pattern
 
 > **FastMCP evolves rapidly.** Before implementing, fetch current docs via Context7:
@@ -139,6 +157,38 @@ def get_report(report_id: str, format: str = "json") -> dict:
 
 ---
 
+## TypeScript SDK Alternative
+
+For TypeScript/Node.js projects:
+
+```typescript
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js"
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
+import { z } from "zod"
+
+const server = new McpServer({ name: "my-server", version: "1.0.0" })
+
+server.tool(
+  "get_user",
+  "Fetch a user profile by ID. Returns name, email, and role.",
+  { user_id: z.string().describe("The user's unique identifier") },
+  async ({ user_id }) => {
+    const user = await db.getUser(user_id)
+    if (!user) {
+      return { content: [{ type: "text", text: JSON.stringify({ error: "not_found" }) }] }
+    }
+    return {
+      content: [{ type: "text", text: JSON.stringify({ id: user.id, name: user.name }) }]
+    }
+  }
+)
+
+const transport = new StdioServerTransport()
+await server.connect(transport)
+```
+
+---
+
 ## Common MCP Server Patterns
 
 ### Pattern 1: RAG search tool
@@ -243,13 +293,19 @@ Add to Cursor MCP config:
 Before registering with a client:
 
 ```bash
-# Start the server
-python server.py
-
-# In another terminal, test with the MCP inspector (if available)
-# Or test the underlying function logic directly in Python
+# Test function logic directly
 python -c "from server import search_documents; print(search_documents('test query'))"
+
+# Use the MCP inspector for protocol-level testing
+npx @modelcontextprotocol/inspector python server.py
 ```
+
+**Tool test checklist:**
+- [ ] Each tool returns expected output for valid input
+- [ ] Each tool returns a typed error for invalid input (not an exception)
+- [ ] Optional parameters use their defaults when omitted
+- [ ] Empty results return empty array, not null
+- [ ] Server starts without errors
 
 After registering:
 1. Start a new Claude session (to reload the MCP list)

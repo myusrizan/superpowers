@@ -103,9 +103,9 @@ Start a new session in your chosen platform and ask for something that should tr
 
 ## What's Inside
 
-60 skills across 6 categories. The skill catalog is auto-generated from frontmatter on every build — run `bash scripts/build-skills.sh` after adding or editing skills.
+55 skills across 6 categories. The skill catalog is auto-generated from frontmatter on every build — run `bash scripts/build-skills.sh` after adding or editing skills.
 
-### coding/ — Software development workflow (27 skills)
+### coding/ — Software development workflow (25 skills)
 
 | Skill | What it does |
 |-------|-------------|
@@ -121,7 +121,7 @@ Start a new session in your chosen platform and ask for something that should tr
 | **dependency-management** | Add vs build decisions, pinning strategy, lock file discipline, vulnerability audits |
 | **diagnosing** | Two modes: systematic debugging (4-phase root cause: reproduce → pattern → hypothesis → fix with test) and performance profiling (measure → profile → one fix → measure again) |
 | **feature-workflow** | Three phases: brainstorm (design gate before any code), plan (bite-sized tasks with exact code/commands), execute (batch with checkpoints) |
-| **frontend-design** | UI component design: atomic hierarchy, state handling, composition over props, layout systems, accessibility standards, design review checklist |
+| **frontend-design** | UI component design + web design standards: atomic hierarchy, state handling, composition, design tokens (typography, color, spacing, z-axis), interaction timing, accessibility, responsive breakpoints |
 | **observability** | Structured logging, metrics (counter/gauge/histogram), distributed tracing, SLO-based alerting |
 | **plan-harder** | Adversarial planning: assumption mapping, failure mode analysis, pre-mortem, devil's advocate pass — stress-test plans before execution |
 | **planning-sessions** | Prioritizes a backlog of candidate features — dependency ordering, value/effort ratio, milestones; includes adversarial planning mode |
@@ -132,12 +132,11 @@ Start a new session in your chosen platform and ask for something that should tr
 | **tailwind-design-system** | Tailwind CSS design system: token configuration, CVA variant pattern, `cn()` helper, avoiding class sprawl |
 | **test-driven-development** | RED-GREEN-REFACTOR: write failing test, watch fail, write minimal code, watch pass, refactor |
 | **typescript-advanced-types** | Advanced TypeScript: generics, conditional types, mapped types, template literals, discriminated unions, utility types |
-| **ui-ux-design** | Industry-matched UI/UX: analyze context, select style system, apply accessibility/interaction standards |
+| **ui-ux-design** | Industry-matched UI/UX: analyze context, select style system, apply accessibility/interaction standards; 30 industry patterns, anti-generic-AI checklist |
 | **verification-before-completion** | Evidence before claims — run the command, read the output, then report status |
-| **web-design-guidelines** | Web design standards: visual hierarchy, typography scale, color system, layout principles, interaction standards, responsive breakpoints |
 | **webapp-testing** | Live browser testing of web apps: user flow verification, happy path + edge cases + error states, structured findings report |
 
-### agents/ — Agent orchestration (8 skills)
+### agents/ — Agent orchestration (7 skills)
 
 | Skill | What it does |
 |-------|-------------|
@@ -145,8 +144,7 @@ Start a new session in your chosen platform and ask for something that should tr
 | **dispatching-parallel-agents** | Parallel subagent dispatch for independent tasks with wave-based dependency ordering |
 | **iterative-retrieval** | Subagent context-gathering: broad dispatch → score (0–1) → refine → max 3 cycles |
 | **llm-council** | Multi-perspective reasoning: dispatch advocate, devil's advocate, and neutral analyst passes; synthesize consensus and surface genuine disagreements |
-| **mcp-builder** | Build MCP servers: tool design, FastMCP/TypeScript SDK implementation, testing, registration with Claude Code/Desktop/Cursor |
-| **mcp-server** | MCP server reference architecture and patterns with FastMCP — tool design, input validation, registration |
+| **mcp-server** | Build MCP servers (Python FastMCP + TypeScript SDK): pre-implementation tool design, patterns, testing with MCP inspector, registration with Claude Code/Desktop/Cursor |
 | **subagent-driven-development** | Per-task subagent dispatch with 2-stage review (spec compliance + code quality); ~15% orchestrator / 100% subagent context budget |
 | **swarm-planner** | Coordinate large swarms of parallel agents: decompose into atomic work units, wave-based execution, context packages, merge and verify |
 
@@ -167,20 +165,19 @@ Start a new session in your chosen platform and ask for something that should tr
 | **reasoning** | First principles, pre-mortem, assumption mapping, inversion, devil's advocate |
 | **thinking-partner** | 4 modes: Opinion / Ideation / Challenge / Sounding Board |
 
-### qol/ — Output production (9 skills)
+### qol/ — Output production (7 skills)
 
 | Skill | What it does |
 |-------|-------------|
-| **doc-coauthoring** | Collaborative document editing: section ownership, versioned drafts, structured feedback markers (APPROVE/REVISE/REWRITE), no-skip-ahead rule |
+| **documents** | Two modes: read/extract PDFs (reports, contracts, financial docs — with page citations) and create Office files (pptx/docx/xlsx via Python) |
 | **documenting** | READMEs, API docs, ADRs, CHANGELOG entries — type-specific structures; includes collaborative authoring protocol |
 | **drafting** | Messages, emails, Slack posts — point-first, tone-calibrated |
 | **explaining** | Audience-calibrated explanations with analogies and layered complexity |
-| **office-documents** | Create and edit PowerPoint (pptx), Word (docx), and Excel (xlsx) files via Python scripts — python-pptx, python-docx, openpyxl |
-| **pdf** | Read, analyze, and extract structured information from PDFs — reports, contracts, financial docs — with page citations |
+| **grammar-mirror** | Match and mirror the user's grammar and writing style |
 | **researching** | Multi-source synthesis — direct answer first, evidence, caveats, confidence |
 | **summarizing** | Bullet / narrative / executive / tldr — format matched to content and need |
 
-### meta/ — Skill system (9 skills)
+### meta/ — Skill system (8 skills)
 
 | Skill | What it does |
 |-------|-------------|
@@ -190,8 +187,7 @@ Start a new session in your chosen platform and ask for something that should tr
 | **prompting** | Two modes: efficiency (8 patterns for lean prompts — goal first, constrain output, batch requests) and generation (produce reusable system prompts saved to `prompts/`) |
 | **sensitive-data-guard** | Detects credentials/PII in shared content — mandatory revocation warning before any resolution |
 | **session-memory** | Four modes: observe mid-session, save at end, restore at start, consolidate (deduplicate and compress stale observations) |
-| **skill-creator** | Structured skill authoring: define scope, write frontmatter trigger, draft body, validate, place and register |
-| **skill-management** | Two phases: create/write (design → draft → TDD test → iterate → optimize description) and stocktake (audit all skills for actionability, scope fit, uniqueness, currency) |
+| **skill-management** | Two phases: create/write (pre-existence check, design, TDD test, 4 validation tests, optimize description) and stocktake (audit all skills for actionability, scope fit, uniqueness, currency) |
 | **using-superpowers** | Mandatory session-start skill — discovers available skills before taking any action |
 
 ## Philosophy
