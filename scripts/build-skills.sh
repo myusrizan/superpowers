@@ -1,76 +1,81 @@
 #!/usr/bin/env bash
 # build-skills.sh
-# Rebuilds the skills/ folder from custom-skills/.
-# Called automatically by hooks/session-start on every session.
-# Run manually to rebuild without starting a session:
-#   ./scripts/build-skills.sh [--code | --no-code]
+# Rebuilds skills/ and dist/ from custom-skills/chat/ and custom-skills/plugin/.
 #
-# Modes:
-#   (no flag)  — all categories (default)
-#   --code     — coding, agents, git only (+ using-superpowers bootstrap)
-#   --no-code  — meta, qol, thinking only
+# Output:
+#   chat/    → dist/   (zipped .zip files — upload to Claude directly)
+#   plugin/  → skills/ (copied flat — loaded by Claude Code plugin)
+#
+# Usage:
+#   ./scripts/build-skills.sh           — build both chat and plugin (default)
+#   ./scripts/build-skills.sh --chat    — build chat skills only
+#   ./scripts/build-skills.sh --plugin  — build plugin skills only
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
-PLUGIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
-SRC="${PLUGIN_ROOT}/custom-skills"
-DEST="${PLUGIN_ROOT}/skills"
+CUSTOM="${ROOT}/custom-skills"
+CHAT_SRC="${CUSTOM}/chat"
+PLUGIN_SRC="${CUSTOM}/plugin"
 
-# Parse install mode
+SKILLS_DEST="${ROOT}/skills"
+DIST_DEST="${ROOT}/dist"
+
+# Parse mode
 MODE="${1:-}"
 case "$MODE" in
-    --code)
-        CATEGORIES="coding agents git"
-        echo "build-skills: Building code-only profile (coding, agents, git + using-superpowers bootstrap)." >&2
+    --chat)
+        BUILD_CHAT=1; BUILD_PLUGIN=0
+        echo "build-skills: Building chat skills only." >&2
         ;;
-    --no-code)
-        CATEGORIES="meta qol thinking"
-        echo "build-skills: Building no-code profile (meta, qol, thinking)." >&2
+    --plugin)
+        BUILD_CHAT=0; BUILD_PLUGIN=1
+        echo "build-skills: Building plugin skills only." >&2
         ;;
     "")
-        CATEGORIES="coding agents git meta qol thinking"
-        echo "build-skills: Building full profile (all categories)." >&2
+        BUILD_CHAT=1; BUILD_PLUGIN=1
+        echo "build-skills: Building chat + plugin skills." >&2
         ;;
     *)
-        echo "build-skills: ERROR — unknown mode '${MODE}'. Valid options: --code, --no-code, or omit for all." >&2
+        echo "build-skills: ERROR — unknown mode '${MODE}'. Valid options: --chat, --plugin, or omit for both." >&2
         exit 1
         ;;
 esac
-export BUILD_CATEGORIES="$CATEGORIES"
 
-# Validate source exists
-if [ ! -d "$SRC" ]; then
-    echo "build-skills: ERROR — custom-skills/ not found at ${SRC}" >&2
-    exit 1
-fi
+# Validate source dirs exist
+[ -d "$CHAT_SRC" ]   || { echo "build-skills: ERROR — custom-skills/chat/ not found."   >&2; exit 1; }
+[ -d "$PLUGIN_SRC" ] || { echo "build-skills: ERROR — custom-skills/plugin/ not found." >&2; exit 1; }
 
-# Auto-generate skill catalog in using-superpowers/SKILL.md from frontmatter
-catalog_source="${SRC}/meta/using-superpowers/SKILL.md"
+# ---------------------------------------------------------------------------
+# Auto-generate skill catalog in using-superpowers/SKILL.md
+# ---------------------------------------------------------------------------
+catalog_source="${CHAT_SRC}/meta/using-superpowers/SKILL.md"
 if [ -f "$catalog_source" ] && command -v python3 >/dev/null 2>&1; then
-    SRC="$SRC" CATALOG="$catalog_source" BUILD_CATEGORIES="$BUILD_CATEGORIES" python3 << 'PYEOF'
+    BUILD_CHAT="$BUILD_CHAT" BUILD_PLUGIN="$BUILD_PLUGIN" \
+    CHAT_SRC="$CHAT_SRC" PLUGIN_SRC="$PLUGIN_SRC" \
+    CATALOG="$catalog_source" python3 << 'PYEOF'
 import os, re, sys
 
-src = os.environ['SRC']
+chat_src   = os.environ['CHAT_SRC']
+plugin_src = os.environ['PLUGIN_SRC']
 catalog_file = os.environ['CATALOG']
-allowed = set(os.environ.get('BUILD_CATEGORIES', '').split())
+build_chat   = os.environ['BUILD_CHAT'] == '1'
+build_plugin = os.environ['BUILD_PLUGIN'] == '1'
 
-CATEGORY_META = [
-    ('coding',   'Software development workflow'),
-    ('agents',   'Agent orchestration'),
-    ('git',      'Version control'),
-    ('thinking', 'Intellectual engagement'),
-    ('qol',      'Output production'),
+CHAT_CATEGORIES = [
     ('meta',     'Skill system'),
+    ('qol',      'Output production'),
+    ('thinking', 'Intellectual engagement'),
 ]
 
-# Filter to only the categories in this build profile
-# Always include meta for using-superpowers (catalog bootstrap), even in --code mode
-if allowed:
-    filtered = [(c, d) for c, d in CATEGORY_META if c in allowed or c == 'meta']
-else:
-    filtered = CATEGORY_META
+PLUGIN_CATEGORIES = [
+    ('coding',  'Software development workflow'),
+    ('agents',  'Agent orchestration'),
+    ('git',     'Version control'),
+    ('meta',    'Discovery & docs'),
+]
 
 def parse_frontmatter(path):
     try:
@@ -89,34 +94,47 @@ def parse_frontmatter(path):
     return fm
 
 def shorten_desc(desc):
-    # Strip "Use [qualifiers] when " prefix (handles "Use when", "Use ONLY when", etc.)
     desc = re.sub(r'^[Uu]se (?:\w+ )*when ', '', desc)
     return desc[0].upper() + desc[1:] if desc else desc
 
+def collect_skills(base, categories):
+    lines = []
+    for cat, cat_desc in categories:
+        cat_dir = os.path.join(base, cat)
+        if not os.path.isdir(cat_dir):
+            continue
+        skills = []
+        for skill_dir in sorted(os.listdir(cat_dir)):
+            skill_md = os.path.join(cat_dir, skill_dir, 'SKILL.md')
+            if not os.path.isfile(skill_md):
+                continue
+            fm = parse_frontmatter(skill_md)
+            name = fm.get('name', '')
+            desc = fm.get('description', '')
+            if not name or name == 'using-superpowers':
+                continue
+            skills.append((name, shorten_desc(desc)))
+        if not skills:
+            continue
+        lines.append(f'**{cat}/** — {cat_desc}')
+        lines.append('| Skill | Use when |')
+        lines.append('|-------|----------|')
+        for name, desc in skills:
+            lines.append(f'| `{name}` | {desc} |')
+        lines.append('')
+    return lines
+
 catalog_lines = []
-for cat, cat_desc in filtered:
-    cat_dir = os.path.join(src, cat)
-    if not os.path.isdir(cat_dir):
-        continue
-    skills = []
-    for skill_dir in sorted(os.listdir(cat_dir)):
-        skill_md = os.path.join(cat_dir, skill_dir, 'SKILL.md')
-        if not os.path.isfile(skill_md):
-            continue
-        fm = parse_frontmatter(skill_md)
-        name = fm.get('name', '')
-        desc = fm.get('description', '')
-        if not name or name == 'using-superpowers':
-            continue
-        skills.append((name, shorten_desc(desc)))
-    if not skills:
-        continue
-    catalog_lines.append(f'**{cat}/** — {cat_desc}')
-    catalog_lines.append('| Skill | Use when |')
-    catalog_lines.append('|-------|----------|')
-    for name, desc in skills:
-        catalog_lines.append(f'| `{name}` | {desc} |')
+
+if build_chat:
+    catalog_lines.append('### Chat Skills')
     catalog_lines.append('')
+    catalog_lines.extend(collect_skills(chat_src, CHAT_CATEGORIES))
+
+if build_plugin:
+    catalog_lines.append('### Plugin Skills')
+    catalog_lines.append('')
+    catalog_lines.extend(collect_skills(plugin_src, PLUGIN_CATEGORIES))
 
 catalog_content = '\n'.join(catalog_lines).rstrip('\n')
 
@@ -142,48 +160,49 @@ if new_content != original:
         f.write(new_content)
     print("build-skills: Catalog regenerated in using-superpowers/SKILL.md", file=sys.stderr)
 
-# Warn if skill count is approaching cognitive overload threshold
 skill_count = sum(1 for line in catalog_lines if line.startswith('| `'))
 WARN_THRESHOLD = 60
 if skill_count >= WARN_THRESHOLD:
-    print(f"build-skills: WARNING — {skill_count} skills in catalog (threshold: {WARN_THRESHOLD}). Consider splitting catalog into core/extended.", file=sys.stderr)
+    print(f"build-skills: WARNING — {skill_count} skills in catalog (threshold: {WARN_THRESHOLD}). Consider splitting.", file=sys.stderr)
 else:
     print(f"build-skills: {skill_count} skills in catalog.", file=sys.stderr)
 PYEOF
 fi
 
-# Rebuild destination — copy only the categories in this build profile
-rm -rf "$DEST"
-mkdir -p "$DEST"
+# ---------------------------------------------------------------------------
+# PLUGIN skills → skills/ (flat copy for Claude Code)
+# ---------------------------------------------------------------------------
+if [ "$BUILD_PLUGIN" -eq 1 ]; then
+    rm -rf "$SKILLS_DEST"
+    mkdir -p "$SKILLS_DEST"
 
-for cat in $CATEGORIES; do
-    if [ -d "${SRC}/${cat}" ]; then
-        cp -r "${SRC}/${cat}" "${DEST}/${cat}"
-    fi
-done
+    for cat_dir in "${PLUGIN_SRC}"/*/; do
+        cat="$(basename "$cat_dir")"
+        if [ -d "$cat_dir" ]; then
+            cp -r "$cat_dir" "${SKILLS_DEST}/${cat}"
+        fi
+    done
 
-# Always copy meta/using-superpowers (bootstrap skill for catalog routing)
-# even in --code mode, so Claude knows which skills are available
-if [[ "$MODE" == "--code" ]] && [ -d "${SRC}/meta/using-superpowers" ]; then
-    mkdir -p "${DEST}/meta"
-    cp -r "${SRC}/meta/using-superpowers" "${DEST}/meta/using-superpowers"
+    plugin_count=$(find "$SKILLS_DEST" -name "SKILL.md" | wc -l | tr -d ' ')
+    echo "build-skills: ${plugin_count} plugin skills copied to skills/." >&2
 fi
 
-# Ensure logs/ directory exists for capturing-context skill
-mkdir -p "${PLUGIN_ROOT}/logs"
+# ---------------------------------------------------------------------------
+# CHAT skills → dist/ (zipped for Claude upload)
+# ---------------------------------------------------------------------------
+if [ "$BUILD_CHAT" -eq 1 ]; then
+    rm -rf "$DIST_DEST"
+    mkdir -p "$DIST_DEST"
 
-# Package skills as .zip files in dist/ for upload compatibility.
-# Upload dialog accepts: .zip/.skill file containing SKILL.md, or standalone .md with YAML frontmatter.
-# Skills with multiple files need .zip; packaging all skills as .zip handles both cases uniformly.
-DIST="${PLUGIN_ROOT}/dist"
-rm -rf "$DIST"
-mkdir -p "$DIST"
+    find "$CHAT_SRC" -name "SKILL.md" | while IFS= read -r skill_md; do
+        skill_dir="$(dirname "$skill_md")"
+        skill_name="$(basename "$skill_dir")"
+        (cd "$skill_dir" && zip -qr "${DIST_DEST}/${skill_name}.zip" .)
+    done
 
-find "$DEST" -name "SKILL.md" | while IFS= read -r skill_md; do
-    skill_dir="$(dirname "$skill_md")"
-    skill_name="$(basename "$skill_dir")"
-    (cd "$skill_dir" && zip -qr "${DIST}/${skill_name}.zip" .)
-done
+    chat_count=$(find "$DIST_DEST" -name "*.zip" | wc -l | tr -d ' ')
+    echo "build-skills: ${chat_count} chat skills zipped to dist/." >&2
+fi
 
-skill_zip_count=$(find "$DIST" -name "*.zip" | wc -l | tr -d ' ')
-echo "build-skills: Packaged ${skill_zip_count} skills as .zip files in dist/." >&2
+# Ensure logs/ directory exists
+mkdir -p "${ROOT}/logs"

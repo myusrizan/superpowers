@@ -103,13 +103,62 @@ Start a new session in your chosen platform and ask for something that should tr
 
 ## What's Inside
 
-55 skills across 6 categories. The skill catalog is auto-generated from frontmatter on every build — run `bash scripts/build-skills.sh` after adding or editing skills.
+**51 skills** split into two delivery types:
 
-### coding/ — Software development workflow (25 skills)
+| Type | Count | Location | Purpose |
+|------|-------|----------|---------|
+| **Chat skills** | 15 | `custom-skills/chat/` → `dist/` | Upload to Claude — behavioral, always-on |
+| **Plugin skills** | 36 | `custom-skills/plugin/` → `skills/` | Claude Code plugin — task workflows, on-demand |
+
+The skill catalog is auto-generated from frontmatter on every build — run `bash scripts/build-skills.sh` after adding or editing skills.
+
+---
+
+### Chat Skills (15) — upload `dist/*.zip` to Claude
+
+These shape how Claude behaves in every conversation.
+
+#### meta/ — Skill system (6 skills)
 
 | Skill | What it does |
 |-------|-------------|
-| **advanced-testing** | E2E tests (Playwright/Cypress): Page Object Model, flaky test quarantine, condition-based waits; and AI eval harness: capability vs regression evals, pass@k metrics, graders |
+| **md-improver** | 5-phase CLAUDE.md audit: discover → assess (6 criteria A–F) → report → propose → apply; includes auto-generate from codebase |
+| **prompting** | Two modes: efficiency (8 patterns for lean prompts) and generation (produce reusable system prompts saved to `prompts/`) |
+| **sensitive-data-guard** | Detects credentials/PII in shared content — mandatory revocation warning before any resolution |
+| **session-memory** | Four modes: observe mid-session, save at end, restore at start, consolidate (deduplicate and compress stale observations) |
+| **skill-management** | Two phases: create/write (pre-existence check, design, 4 validation tests) and stocktake (audit all skills for actionability, scope fit, uniqueness, currency) |
+| **using-superpowers** | Mandatory session-start skill — discovers available skills before taking any action |
+
+#### qol/ — Output production (6 skills)
+
+| Skill | What it does |
+|-------|-------------|
+| **documenting** | READMEs, API docs, ADRs, CHANGELOG entries — type-specific structures; includes collaborative authoring protocol |
+| **documents** | Two modes: read/extract PDFs (reports, contracts, financial docs) and create Office files (pptx/docx/xlsx via Python) |
+| **drafting** | Messages, emails, Slack posts — point-first, tone-calibrated |
+| **explaining** | Audience-calibrated explanations with analogies and layered complexity |
+| **researching** | Multi-source synthesis — direct answer first, evidence, caveats, confidence |
+| **summarizing** | Bullet / narrative / executive / tldr — format matched to content and need |
+
+#### thinking/ — Intellectual engagement (3 skills)
+
+| Skill | What it does |
+|-------|-------------|
+| **decision-making** | Structured evaluation for high-stakes choices: options → criteria → pre-mortem → score → commit |
+| **reasoning** | First principles, pre-mortem, assumption mapping, inversion, devil's advocate |
+| **thinking-partner** | 4 modes: Opinion / Ideation / Challenge / Sounding Board |
+
+---
+
+### Plugin Skills (36) — loaded by Claude Code from `skills/`
+
+These are task-specific workflows invoked on-demand during development.
+
+#### coding/ — Software development workflow (23 skills)
+
+| Skill | What it does |
+|-------|-------------|
+| **advanced-testing** | Three modes: live interactive browser testing (user flows, happy path + edge cases); automated E2E test code (Playwright POM, flaky test quarantine, condition-based waits); AI eval harness (capability vs regression evals, pass@k metrics, graders) |
 | **api-design** | REST API design: URL structure, HTTP semantics, pagination (offset vs cursor), versioning strategy |
 | **architecture-patterns** | System architecture: layered, modular monolith, hexagonal, event-driven — pattern selection guide, decision framework, anti-patterns |
 | **audit-website** | Full website health audit across performance (Core Web Vitals), accessibility (WCAG AA), SEO, and code quality — graded report with fixes |
@@ -121,22 +170,19 @@ Start a new session in your chosen platform and ask for something that should tr
 | **dependency-management** | Add vs build decisions, pinning strategy, lock file discipline, vulnerability audits |
 | **diagnosing** | Two modes: systematic debugging (4-phase root cause: reproduce → pattern → hypothesis → fix with test) and performance profiling (measure → profile → one fix → measure again) |
 | **feature-workflow** | Three phases: brainstorm (design gate before any code), plan (bite-sized tasks with exact code/commands), execute (batch with checkpoints) |
-| **frontend-design** | UI component design + web design standards: atomic hierarchy, state handling, composition, design tokens (typography, color, spacing, z-axis), interaction timing, accessibility, responsive breakpoints |
 | **observability** | Structured logging, metrics (counter/gauge/histogram), distributed tracing, SLO-based alerting |
-| **plan-harder** | Adversarial planning: assumption mapping, failure mode analysis, pre-mortem, devil's advocate pass — stress-test plans before execution |
-| **planning-sessions** | Prioritizes a backlog of candidate features — dependency ordering, value/effort ratio, milestones; includes adversarial planning mode |
+| **planning-sessions** | Prioritizes a backlog of candidate features — dependency ordering, value/effort ratio, milestones; includes full adversarial planning mode (assumption mapping, failure analysis, pre-mortem, devil's advocate) |
 | **refactoring** | Refactoring plan first, characterization tests, one type at a time, tests after every change, undo on red |
 | **search-first** | Research before building — find existing libraries/MCPs/skills via `rg` and Context7 before writing a line of code |
 | **security** | Two parts: vulnerability review (OWASP 10 threat categories, attack surface mapping) and silent failure review (empty catch blocks, swallowed exceptions, unjustified fallbacks, critical path zero-tolerance) |
 | **supabase-postgres** | Postgres/Supabase patterns: schema design, RLS policies, query optimization, indexing rules, Supabase-specific client and Edge Function patterns |
 | **tailwind-design-system** | Tailwind CSS design system: token configuration, CVA variant pattern, `cn()` helper, avoiding class sprawl |
-| **test-driven-development** | RED-GREEN-REFACTOR: write failing test, watch fail, write minimal code, watch pass, refactor |
+| **test-driven-development** | RED-GREEN-REFACTOR: write failing test, watch it fail, write minimal code, watch it pass, refactor |
 | **typescript-advanced-types** | Advanced TypeScript: generics, conditional types, mapped types, template literals, discriminated unions, utility types |
-| **ui-ux-design** | Industry-matched UI/UX: analyze context, select style system, apply accessibility/interaction standards; 30 industry patterns, anti-generic-AI checklist |
+| **ui-ux-design** | Industry-matched UI/UX (30 industry patterns) + component architecture (atomic design, state handling, composition) + design tokens (typography, color, spacing, z-axis) + anti-generic-AI checklist |
 | **verification-before-completion** | Evidence before claims — run the command, read the output, then report status |
-| **webapp-testing** | Live browser testing of web apps: user flow verification, happy path + edge cases + error states, structured findings report |
 
-### agents/ — Agent orchestration (7 skills)
+#### agents/ — Agent orchestration (7 skills)
 
 | Skill | What it does |
 |-------|-------------|
@@ -148,7 +194,7 @@ Start a new session in your chosen platform and ask for something that should tr
 | **subagent-driven-development** | Per-task subagent dispatch with 2-stage review (spec compliance + code quality); ~15% orchestrator / 100% subagent context budget |
 | **swarm-planner** | Coordinate large swarms of parallel agents: decompose into atomic work units, wave-based execution, context packages, merge and verify |
 
-### git/ — Version control (4 skills)
+#### git/ — Version control (4 skills)
 
 | Skill | What it does |
 |-------|-------------|
@@ -157,38 +203,14 @@ Start a new session in your chosen platform and ask for something that should tr
 | **history-archaeology** | Trace bug origins via git blame, bisect, log -S pickaxe, and show — read history before forming hypotheses |
 | **using-git-worktrees** | Isolated worktrees with smart directory selection and safety verification |
 
-### thinking/ — Intellectual engagement (3 skills)
-
-| Skill | What it does |
-|-------|-------------|
-| **decision-making** | Structured evaluation for high-stakes choices: options → criteria → pre-mortem → score → commit |
-| **reasoning** | First principles, pre-mortem, assumption mapping, inversion, devil's advocate |
-| **thinking-partner** | 4 modes: Opinion / Ideation / Challenge / Sounding Board |
-
-### qol/ — Output production (7 skills)
-
-| Skill | What it does |
-|-------|-------------|
-| **documents** | Two modes: read/extract PDFs (reports, contracts, financial docs — with page citations) and create Office files (pptx/docx/xlsx via Python) |
-| **documenting** | READMEs, API docs, ADRs, CHANGELOG entries — type-specific structures; includes collaborative authoring protocol |
-| **drafting** | Messages, emails, Slack posts — point-first, tone-calibrated |
-| **explaining** | Audience-calibrated explanations with analogies and layered complexity |
-| **grammar-mirror** | Match and mirror the user's grammar and writing style |
-| **researching** | Multi-source synthesis — direct answer first, evidence, caveats, confidence |
-| **summarizing** | Bullet / narrative / executive / tldr — format matched to content and need |
-
-### meta/ — Skill system (8 skills)
+#### meta/ — Discovery & docs (2 skills)
 
 | Skill | What it does |
 |-------|-------------|
 | **context7** | Fetch current library documentation via Context7 MCP before implementing — resolve library ID, query docs, apply to implementation |
 | **find-skills** | Search skills.sh marketplace for agent skills — evaluate by install count and relevance, inspect before installing or adapting locally |
-| **md-improver** | 5-phase CLAUDE.md audit: discover → assess (6 criteria A–F) → report → propose → apply; includes auto-generate from codebase |
-| **prompting** | Two modes: efficiency (8 patterns for lean prompts — goal first, constrain output, batch requests) and generation (produce reusable system prompts saved to `prompts/`) |
-| **sensitive-data-guard** | Detects credentials/PII in shared content — mandatory revocation warning before any resolution |
-| **session-memory** | Four modes: observe mid-session, save at end, restore at start, consolidate (deduplicate and compress stale observations) |
-| **skill-management** | Two phases: create/write (pre-existence check, design, TDD test, 4 validation tests, optimize description) and stocktake (audit all skills for actionability, scope fit, uniqueness, currency) |
-| **using-superpowers** | Mandatory session-start skill — discovers available skills before taking any action |
+
+---
 
 ## Philosophy
 
@@ -203,13 +225,28 @@ Read more: [Superpowers for Claude Code](https://blog.fsck.com/2025/10/09/superp
 
 ## Adding Custom Skills
 
-Skills live in `custom-skills/` organized by category (`coding/`, `agents/`, `git/`, `thinking/`, `qol/`, `meta/`). After adding or editing a skill:
+Skills live in `custom-skills/` organized by type and category:
+
+```
+custom-skills/
+  chat/               ← upload to Claude (dist/*.zip)
+    meta/
+    qol/
+    thinking/
+  plugin/             ← Claude Code plugin (skills/)
+    agents/
+    coding/
+    git/
+    meta/
+```
+
+After adding or editing a skill:
 
 ```bash
 bash scripts/build-skills.sh
 ```
 
-This rebuilds `skills/` from `custom-skills/` and auto-regenerates the skill catalog in `using-superpowers/SKILL.md` from frontmatter.
+This rebuilds both `skills/` (plugin) and `dist/` (chat zips), and auto-regenerates the skill catalog in `using-superpowers/SKILL.md` from frontmatter.
 
 Each skill is a directory containing `SKILL.md` with YAML frontmatter:
 
@@ -222,19 +259,22 @@ description: Use when [specific triggering condition]. Invoke whenever [adjacent
 
 The `description` field is the primary trigger mechanism. Make it specific but include adjacent phrasings — Claude undertriggers by default.
 
-See `custom-skills/meta/skill-management/SKILL.md` for the complete skill creation guide, or use the `skill-management` skill to build and test new skills iteratively.
+See `custom-skills/chat/meta/skill-management/SKILL.md` for the complete skill creation guide.
 
 ### Build profiles
 
-The build script supports three install profiles:
-
 ```bash
-bash scripts/build-skills.sh           # all 60 skills (default)
-bash scripts/build-skills.sh --code    # coding + agents + git only
-bash scripts/build-skills.sh --no-code # meta + qol + thinking only
+bash scripts/build-skills.sh           # build both chat and plugin (default)
+bash scripts/build-skills.sh --chat    # rebuild dist/ only (after editing a chat skill)
+bash scripts/build-skills.sh --plugin  # rebuild skills/ only (after editing a plugin skill)
 ```
 
-`--code` always includes `meta/using-superpowers` so Claude can still route skills regardless of profile.
+### Output locations
+
+| Command | Output | Use for |
+|---------|--------|---------|
+| `--chat` | `dist/*.zip` | Upload individual .zip files to Claude |
+| `--plugin` | `skills/` | Claude Code reads this automatically |
 
 ## Updating
 

@@ -1,6 +1,6 @@
 ---
 name: planning-sessions
-description: Use when facing multiple candidate features or tasks and needing to decide what order to tackle them — produces a prioritized backlog or sprint plan from a pool of work items
+description: Use when facing multiple candidate features or tasks and needing to decide what order to tackle them — produces a prioritized backlog or sprint plan from a pool of work items. Also use to adversarially stress-test a plan before executing it — invoke when asked to "stress test this plan", "find the holes in this", or "what could go wrong?".
 ---
 
 # Planning Sessions
@@ -160,32 +160,95 @@ Goal: [What this milestone delivers]
 
 Use when the stakes are high and you want to stress-test the plan before executing it.
 
-**Trigger:** Plan is draft-complete. Before confirming, run the plan through these challenges.
+**Core principle:** The cheapest time to find a flaw is before writing code. The most expensive is after deployment.
 
-### Challenge 1: Assumption Audit
-List every assumption the plan relies on:
-- "The API is available" — what if it's not?
-- "This will take 2 days" — what if it takes 6?
-- "Users will understand X" — what if they don't?
+**Trigger:** Plan is draft-complete. Before confirming, run all steps below.
 
-For each assumption: **If this is wrong, does the plan fail?** If yes → validate or add a contingency.
+### Step A: Restate the Plan
 
-### Challenge 2: Dependency Risk
-For each item with dependencies:
-- What happens if the dependency is late or wrong?
-- Is there a parallel path that doesn't block on this?
+Write the plan's core assumption in one sentence:
 
-### Challenge 3: What's Missing?
-Read the plan from the perspective of someone who will execute it cold:
-- What files are not mentioned that they'll need to find?
-- What commands are assumed but not listed?
-- What decisions are left unresolved?
+> "We will [do X] because [Y], expecting [Z]."
 
-### Challenge 4: Simplification Pass
-For each milestone: "Is there a simpler path to the same outcome?"
-- Remove steps that exist "just in case"
-- Merge steps that don't need to be separate
-- Defer steps that belong in a later milestone
+This is the target. The rest of the process attacks it.
+
+### Step B: Assumption Mapping
+
+List every assumption the plan relies on being true:
+
+| # | Assumption | If wrong, what happens? | Confidence |
+|---|-----------|------------------------|-----------|
+| 1 | The database can handle 10K concurrent writes | System degrades or crashes | Medium |
+| 2 | Auth token format won't change for 6 months | All clients break on token refresh | High |
+| 3 | The third-party API has 99.9% uptime | Feature unavailable when it's down | Low |
+
+**Rule:** If the consequence of being wrong is catastrophic, that assumption needs validation before the plan proceeds.
+
+### Step C: Failure Mode Analysis
+
+For each major step in the plan, ask: "What does failure look like here?"
+
+```
+Step: Migrate existing users to new auth system
+Failure modes:
+- Partial migration: some users migrated, some not → split state, hard to debug
+- Token invalidation: existing sessions fail silently → logged-out users
+- Rollback needed: no rollback path designed → stuck in broken state
+```
+
+### Step D: Pre-Mortem
+
+Imagine it's 6 months later and the plan has **failed badly**. Write the post-mortem:
+
+> "The plan failed because we didn't account for [X]. We noticed it when [Y happened]. The root cause was [Z]. We could have caught it earlier by [action]."
+
+Fill in X, Y, Z. If you can write a convincing post-mortem, the plan has a real risk.
+
+### Step E: Devil's Advocate Pass
+
+Argue the strongest case against the plan:
+
+- "There's a simpler approach: [alternative] — why aren't we doing that?"
+- "This plan requires N things to go right. Historically, N-thing plans fail at step N/2."
+- "The biggest risk isn't technical — it's [organizational/timing/dependency] risk."
+- For each dependency: what happens if it's late or wrong? Is there a parallel path?
+- Read the plan cold: what files, commands, or decisions are assumed but not stated?
+- For each milestone: "Is there a simpler path to the same outcome?"
+
+### Step F: Revised Plan
+
+After the adversarial pass, produce a revised plan that:
+- Validates the highest-risk assumptions before committing resources
+- Adds explicit rollback steps for irreversible actions
+- Identifies the earliest possible checkpoint to verify the plan is working
+
+```markdown
+## Plan Stress-Test — [Plan Name]
+
+### Core Assumption
+We will [X] because [Y], expecting [Z].
+
+### Risky Assumptions (sorted by risk)
+1. [Highest risk] — if wrong: [consequence] — validate by: [action]
+
+### Top Failure Modes
+1. [Failure mode] — detect via: [signal] — mitigation: [action]
+
+### Pre-Mortem
+"Failed because: [X]. Could have caught it by: [Y]."
+
+### Recommended Changes
+- Add: [what to add]
+- Remove: [unnecessary complexity]
+- Validate first: [what must be confirmed before execution]
+- Add rollback: [which irreversible steps need an undo path]
+```
+
+**Hard rules:**
+- Don't soften the adversarial pass — a real failure will be harsher
+- Assumptions must be falsifiable — "we assume this works" is a wish, not an assumption
+- Every irreversible step needs a rollback or explicit acceptance of the risk
+- High-risk assumptions that can be tested cheaply must be tested before the full plan executes
 
 After adversarial review: revise the plan and re-present. Only proceed after the adversarial pass is complete.
 

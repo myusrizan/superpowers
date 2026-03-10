@@ -1,19 +1,107 @@
 ---
 name: advanced-testing
-description: Use when writing, organizing, or debugging end-to-end tests with Playwright, Cypress, or Selenium, or when building evaluation systems for AI agent behavior to measure reliability or detect regressions. Invoke when E2E tests are flaky, slow, or missing, when browser automation is needed, or when designing eval-driven development workflows.
+description: Use when testing web applications interactively, writing or debugging automated E2E tests with Playwright/Cypress, or building evaluation systems for AI agent behavior. Invoke when asked to "test the app", "check if the form works", "verify the login flow", "E2E tests are flaky", "write browser automation", or "design an eval system".
 ---
 
 # Advanced Testing
 
-Two specialized testing modes. Read the mode that matches your situation.
+Three testing modes. Pick the one that matches your situation.
 
 ---
 
-## Mode A: End-to-End Testing
+## Mode A: Live Interactive Testing
+
+**Core principle:** The app works when a user can complete the task, not when the code looks correct.
+
+Use when you need to verify a running app right now — navigating pages, filling forms, checking rendered output. Not for writing reusable test code (→ Mode B).
+
+### Tools
+
+**Playwright MCP (preferred)**
+
+```
+Navigate to: http://localhost:3000
+Take a screenshot
+Click the "Sign Up" button
+Fill in email: test@example.com
+Fill in password: TestPassword123!
+Click "Create Account"
+Take a screenshot
+Assert: URL contains "/dashboard"
+```
+
+**Claude's Browser Tool** — use directly if available: navigate, click, fill, screenshot, read page content.
+
+**Manual Script (Playwright)**
+
+```typescript
+import { chromium } from 'playwright'
+const browser = await chromium.launch({ headless: true })
+const page = await browser.newPage()
+await page.goto('http://localhost:3000')
+await page.fill('[name="email"]', 'test@example.com')
+await page.fill('[name="password"]', 'TestPassword123!')
+await page.click('[type="submit"]')
+await page.waitForURL('**/dashboard')
+console.log('Login flow: PASS')
+await browser.close()
+```
+
+### Test Flow Structure
+
+**1. Define the flow**
+```
+Actor: [who is doing this]
+Start state: [where they begin]
+Steps: [numbered actions]
+End state: [what success looks like]
+```
+
+**2. Happy path first** — complete the primary success scenario; screenshot at key steps.
+
+**3. Edge cases** — empty inputs, invalid formats, boundary values, special characters.
+
+**4. Error states** — network errors, invalid credentials, duplicate data.
+
+**5. Report findings**
+
+```markdown
+## Flow: [Name]
+**Status:** PASS / FAIL / PARTIAL
+
+### Happy Path
+- [x] Step 1: Navigate to /signup → loads correctly
+- [x] Step 2: Fill form → fields accept input
+- [ ] Step 3: Submit → FAIL (shows "undefined" for username)
+
+### Failures Found
+1. **Username displays as "undefined"** after successful login
+   - Expected: "Hello, [actual username]"
+   - Likely cause: profile fetch fails silently
+
+### State Verification
+| What to check | Result |
+|--------------|--------|
+| URL changed as expected | ✅ |
+| Success message displayed | ❌ |
+| Data persisted | — |
+```
+
+### Hard Rules (Mode A)
+
+- **Run the app first.** Confirm the dev server is running before starting.
+- **Screenshot on failure.** Every failed step needs a screenshot or detailed description.
+- **Test error states, not just happy paths.**
+- **Report what worked too.** "Steps 1–4 pass; step 5 fails" is more useful than just "step 5 fails".
+- **Don't fix bugs during testing.** Log findings, then fix separately.
+
+---
+
+## Mode B: Automated E2E Test Code
 
 **Core principle:** Wait for conditions, not time. Structure tests around user intent, not implementation details.
 
-E2E tests verify the system from a user's perspective: real browser, real DOM, real API calls. They are slow and flaky by nature. Goal: small, reliable suite catching real integration failures — not covering every edge case (unit tests do that).
+E2E tests verify from a user's perspective: real browser, real DOM, real API calls. Goal: small, reliable suite catching real integration failures — not covering every edge case (unit tests do that).
 
 ### Directory Structure
 
@@ -51,7 +139,7 @@ export class LoginPage {
 }
 ```
 
-**POM rules:** Page objects contain selectors and actions, not assertions · Assertions stay in the test · Use `data-testid` attributes — they survive CSS refactors.
+**POM rules:** Page objects contain selectors and actions, not assertions · Assertions stay in the test · Use `data-testid` — they survive CSS refactors.
 
 ### Wait Strategy — Never Use Arbitrary Timeouts
 
@@ -92,7 +180,6 @@ export default defineConfig({
 ### Flaky Test Management
 
 ```bash
-# Reveal flakiness
 npx playwright test my-test.spec.ts --repeat-each=10
 ```
 
@@ -106,9 +193,9 @@ test.fixme('checkout with coupon code', async ({ page }) => {
 
 Never use `test.skip()` without a tracking comment.
 
-**Common flakiness causes:** Timing-dependent selectors → wait for network responses · Shared test state → isolate test data per test · External services → mock them · Animations → disable in test config
+**Common flakiness causes:** Timing-dependent selectors → wait for network responses · Shared test state → isolate test data per test · External services → mock them · Animations → disable in test config.
 
-**Environment-specific skips:** Use purpose-specific env variables, NOT `NODE_ENV`:
+**Environment-specific skips:**
 ```typescript
 test.skip(!!process.env.SKIP_PAYMENT_TESTS, 'Payment tests disabled via SKIP_PAYMENT_TESTS');
 ```
@@ -145,20 +232,18 @@ export const authFixture = base.extend<{ authenticatedPage: Page }>({
     retention-days: 30
 ```
 
-Upload artifacts only on failure.
-
-### Hard Rules
+### Hard Rules (Mode B)
 
 - One Page Object per page/component
 - No `waitForTimeout()` — every wait must be condition-based
-- Quarantine flaky tests immediately — a flaky test trains people to ignore failures
+- Quarantine flaky tests immediately
 - Isolate test data per test
 - Never use `NODE_ENV` as a test skip condition
 - Collect artifacts on failure only
 
 ---
 
-## Mode B: Eval Harness (AI Agent Evaluation)
+## Mode C: Eval Harness (AI Agent Evaluation)
 
 **Core principle:** If you can't measure it, you can't improve it. Define success criteria as executable evals BEFORE changing prompts, skills, or configurations (Eval-Driven Development).
 
@@ -197,7 +282,7 @@ Rate 1–5. Respond with JSON: {{"score": <1-5>, "reason": "<explanation>"}}"""
     return json.loads(response)
 ```
 
-**Prompt injection warning:** Always wrap evaluated content in explicit delimiters (`<agent_output>`) to prevent the content from being treated as instructions.
+**Prompt injection warning:** Always wrap evaluated content in explicit delimiters (`<agent_output>`) to prevent it from being treated as instructions.
 
 **Human grader:** Flag for manual review sparingly — edge cases, first-run validation of a new grader, high-stakes decisions.
 
@@ -258,7 +343,7 @@ Date: [date] | Grader: code-based | Runs: 3
 
 Version eval definitions alongside the skills they test.
 
-### Hard Rules
+### Hard Rules (Mode C)
 
 - Write the eval BEFORE changing the skill (EDD, not EAD)
 - Prefer code graders over model graders
