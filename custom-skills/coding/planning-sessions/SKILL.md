@@ -156,6 +156,41 @@ Goal: [What this milestone delivers]
 
 ---
 
+## Adversarial Planning Mode
+
+Use when the stakes are high and you want to stress-test the plan before executing it.
+
+**Trigger:** Plan is draft-complete. Before confirming, run the plan through these challenges.
+
+### Challenge 1: Assumption Audit
+List every assumption the plan relies on:
+- "The API is available" — what if it's not?
+- "This will take 2 days" — what if it takes 6?
+- "Users will understand X" — what if they don't?
+
+For each assumption: **If this is wrong, does the plan fail?** If yes → validate or add a contingency.
+
+### Challenge 2: Dependency Risk
+For each item with dependencies:
+- What happens if the dependency is late or wrong?
+- Is there a parallel path that doesn't block on this?
+
+### Challenge 3: What's Missing?
+Read the plan from the perspective of someone who will execute it cold:
+- What files are not mentioned that they'll need to find?
+- What commands are assumed but not listed?
+- What decisions are left unresolved?
+
+### Challenge 4: Simplification Pass
+For each milestone: "Is there a simpler path to the same outcome?"
+- Remove steps that exist "just in case"
+- Merge steps that don't need to be separate
+- Defer steps that belong in a later milestone
+
+After adversarial review: revise the plan and re-present. Only proceed after the adversarial pass is complete.
+
+---
+
 ## Integration
 
 **Commonly followed by:**

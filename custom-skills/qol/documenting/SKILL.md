@@ -205,3 +205,35 @@ counter += 1
 - YAGNI applies to documentation too. Don't write docs for code that doesn't exist yet.
 - Internal implementation details that will change — document the interface, not the internals
 - Things that are genuinely obvious from reading the code
+
+---
+
+## Collaborative Authoring Protocol
+
+Use when writing a document **with** a human co-author — not solo.
+
+### Principles
+
+- **Section ownership:** Agree upfront who owns each section (AI drafts, human approves — or vice versa)
+- **Versioned drafts:** Name drafts with version suffixes: `proposal-v1.md`, `proposal-v2.md` — never overwrite
+- **Explicit feedback markers:** Use markers the human can leave inline:
+  - `[APPROVE]` — done, don't change
+  - `[REVISE: note]` — change this specifically
+  - `[REWRITE]` — start over, ask why first
+  - `[QUESTION: ?]` — AI must answer before editing
+
+### Co-Author Workflow
+
+```
+1. AI produces outline → Human approves structure
+2. AI drafts Section 1 → Human marks feedback inline
+3. AI addresses ALL feedback in Section 1 → Move to Section 2
+4. Never advance past an un-approved section
+5. Final pass: human reads top-to-bottom and marks [APPROVE] on whole doc
+```
+
+### Anti-Patterns
+
+- **Silent incorporation:** Never say "updated per feedback" — say exactly what changed: "Removed the history section; shortened intro from 3 paragraphs to 1 per your note"
+- **Overwriting without versioning:** Always version before a major revision
+- **Partial feedback implementation:** Address every marker, not just the easy ones

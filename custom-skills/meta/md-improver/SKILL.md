@@ -29,6 +29,55 @@ Common locations:
 
 Read each file fully before assessing.
 
+### Auto-Generate from Codebase (when CLAUDE.md is missing or empty)
+
+If no `CLAUDE.md` exists or it's essentially empty, generate one from the codebase rather than starting from scratch:
+
+**Step 1: Scan the codebase for commands**
+```bash
+# Package.json scripts
+cat package.json | jq '.scripts'
+# Makefile targets
+grep "^[a-zA-Z].*:" Makefile 2>/dev/null | head -20
+# Common script files
+ls scripts/ 2>/dev/null
+```
+
+**Step 2: Identify the project type and framework**
+```bash
+cat package.json | jq '{name, description, dependencies, devDependencies}' 2>/dev/null | head -30
+ls *.toml *.yaml *.yml 2>/dev/null | head -10
+```
+
+**Step 3: Find conventions from existing code**
+```bash
+# Naming patterns
+rg "^(export|class|function)" src/ -l | head -10
+# Test framework
+rg "describe|test|it\(" --include="*.test.*" -l | head -5
+```
+
+**Step 4: Draft CLAUDE.md from findings**
+
+Use only what was found — no invented conventions. Structure:
+```markdown
+# CLAUDE.md
+
+## Commands
+[Only list commands that actually exist in package.json / Makefile / scripts/]
+
+## Architecture
+[Only what was discovered from the file structure]
+
+## Conventions
+[Only patterns observed in existing code]
+
+## Gotchas
+[Only issues actually discovered, not hypothetical ones]
+```
+
+**Step 5:** Continue with Phase 2 (Assess) using the generated draft as the starting point.
+
 ---
 
 ## Phase 2: Assess

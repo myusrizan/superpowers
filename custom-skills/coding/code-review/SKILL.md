@@ -107,6 +107,7 @@ If FAIL: return findings. Implementer must fix before Phase 2.
 | **Error handling** | Failures caught and communicated appropriately? |
 | **Security** | Input validation issues, injection vectors, exposed secrets? |
 | **Performance** | Obvious O(n²) where O(n) is straightforward? |
+| **Excellence** | Does this code meet the excellence bar — not just "works" but "works well"? |
 
 **Issue severity:** Critical · Important · Minor
 
@@ -121,6 +122,13 @@ Issues:
 - Important [conf: 82]: [description] at [location]
 
 Assessment: [Ready to proceed / Needs fixes before proceeding]
+
+Excellence criteria (use for high-stakes code):
+- Naming: Would a new reader understand this in 5 seconds without context?
+- Error messages: Do they tell the user what to do, not just what failed?
+- Edge cases: Are boundary conditions explicitly handled (empty, nil, overflow)?
+- Observability: Are failures visible — logged, metered, or traceable?
+- Simplicity: Is the simplest possible implementation used?
 ```
 
 ### Validation Pass (Before Reporting)

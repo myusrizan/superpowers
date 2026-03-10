@@ -128,6 +128,39 @@ Save to `docs/codebase-notes.md` or share in session before proceeding.
 - Run the tests before touching anything — document pre-existing failures
 - Write the summary — it is not optional
 
+### Context Map (for task handoff or large codebases)
+
+Before starting implementation on a complex codebase, generate a context map — a concise reference file that captures the navigational structure of the codebase:
+
+```bash
+# Generate a context map of the codebase
+rg --files src/ | head -50  # file list
+rg "^(export|class|function|const.*=.*=>)" src/ -n | head -100  # key exports
+```
+
+**Write to `docs/context-map.md`:**
+
+```markdown
+# Context Map — [Project Name] — [Date]
+
+## Key Entry Points
+- [file] — [what it initializes]
+
+## Module Map
+| Module/Directory | Owns | Key files |
+|-----------------|------|-----------|
+| [dir] | [domain] | [file1, file2] |
+
+## Data Flow
+[Brief: where data enters, how it flows, where it persists]
+
+## Don't-Miss Files
+Files that are easy to overlook but critical:
+- [file] — [why it matters]
+```
+
+Save the context map before making any changes. Update it if the structure changes significantly.
+
 ---
 
 ## Mode B: Investigating (Produce Structured Findings)

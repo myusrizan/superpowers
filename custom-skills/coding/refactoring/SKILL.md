@@ -30,6 +30,30 @@ Refactoring changes how code is written, not what it does. The external behavior
 
 ## The Process
 
+### Step 0: Refactoring Plan (for non-trivial refactors)
+
+Before touching code, write a brief refactoring plan. This separates thinking from doing.
+
+```markdown
+## Refactoring Plan — [Date]
+
+**Target:** [file(s) or module]
+**Current problem:** [specific: "UserService.ts is 400 lines and does auth, profile, and billing"]
+**Goal:** [specific: "Split into auth.ts, profile.ts, billing.ts — each under 100 lines"]
+**Refactoring type:** Extract class / Rename / Move / [type]
+**Safety net:** [test command to run after each step]
+**Steps:**
+1. [first atomic step]
+2. [second atomic step]
+...
+**Done when:** [specific verifiable condition]
+**Rollback:** [how to undo if things go wrong]
+```
+
+Write the plan to a file (`refactoring-plan.md` in the project root or as a comment) before starting. Do not start until the plan is written.
+
+**Why:** A written plan makes the refactoring reviewable. It also prevents scope creep — if a step isn't in the plan, it doesn't happen during this refactoring session.
+
 ### Step 1: Establish a safety net
 
 You cannot refactor safely without tests. Before touching any code:

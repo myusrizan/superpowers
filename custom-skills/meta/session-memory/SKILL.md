@@ -217,3 +217,49 @@ Resume from the first unresolved item, or is there something specific you want t
 | Re-doing completed work | Mark completed items as done, start from Unresolved |
 | Re-litigating decisions | Key Decisions are settled — apply them |
 | Ignoring discrepancies | Surface mismatches between log and actual state explicitly |
+
+---
+
+## Mode D: Memory Consolidation (periodic maintenance)
+
+**When:** User says "consolidate memory", "clean up observations", or `observations.md` has grown past ~500 lines and contains stale/duplicate entries.
+
+**Core principle:** An observation log that's too noisy is as useless as no log. Consolidate periodically.
+
+### Process
+
+**1. Read the full log:**
+```bash
+wc -l logs/observations.md
+cat logs/observations.md
+```
+
+**2. Group by tag:** Find clusters of related observations (same `#tag`).
+
+**3. Identify:**
+- **Duplicates:** Two observations that say the same thing → keep the more specific one
+- **Superseded:** An older observation that a newer one overrides (e.g., old fix that was fixed again)
+- **Resolved blockers:** Observations of type `blocker` that have since been fixed
+- **One-liners that can merge:** 3 tiny observations on the same topic → one richer observation
+
+**4. Write consolidated log:**
+```bash
+# Back up original
+cp logs/observations.md logs/observations.backup.$(date +%Y%m%d).md
+
+# Write consolidated version
+# Preserve all observations that are still relevant
+# Remove only: clear duplicates, superseded entries, resolved blockers
+```
+
+**5. Prepend a consolidation record:**
+```markdown
+<!-- consolidation: 2026-03-10 — reduced from 82 to 41 entries; removed 12 resolved blockers, 29 duplicates -->
+```
+
+### Hard Rules for Consolidation
+
+- **Never delete — only condense.** If unsure whether an observation is superseded, keep it.
+- **Backup before editing.** The original is the source of truth until consolidation is verified.
+- **Keep the consolidation record.** Future consolidations need to know what was already cleaned.
+- **Never consolidate during active work.** Only at session boundaries when the log is stable.
